@@ -1,0 +1,17 @@
+{
+	"expo": {
+		"scheme": "gymApp",
+		"userInterfaceStyle": "automatic",
+		"orientation": "default",
+		"web": {
+			"bundler": "metro"
+		},
+		"name": "gymApp",
+		"slug": "gymApp",
+		"plugins": ["expo-font"],
+		"experiments": {
+			"typedRoutes": true,
+			"reactCompiler": true
+		}
+	}
+}
