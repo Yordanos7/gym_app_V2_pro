@@ -42,31 +42,32 @@ export default function ExercisesScreen() {
 
   const renderItem = ({ item }: { item: Exercise }) => (
     <TouchableOpacity 
-      className="bg-white p-4 mb-3 rounded-xl flex-row items-center shadow-sm border border-gray-100"
+      className="bg-content1 p-4 mb-3 rounded-xl flex-row items-center shadow-sm border border-default-200"
       onPress={() => router.push(`/exercise/${item.id}`)}
     >
-      <View className="bg-blue-50 w-12 h-12 rounded-lg items-center justify-center mr-4">
-        <Ionicons name="barbell" size={24} color="#2563eb" />
+      <View className="bg-primary-50 w-12 h-12 rounded-lg items-center justify-center mr-4">
+        <Ionicons name="barbell" size={24} className="text-primary" />
       </View>
       <View className="flex-1">
-        <Text className="font-bold text-gray-900 text-lg">{item.name}</Text>
-        <Text className="text-gray-500 capitalize">
+        <Text className="font-bold text-foreground text-lg">{item.name}</Text>
+        <Text className="text-default-500 capitalize">
           {item.primaryMuscle.name} • {item.equipment || "Bodyweight"}
         </Text>
       </View>
-      <Ionicons name="chevron-forward" size={20} color="#9ca3af" />
+      <Ionicons name="chevron-forward" size={20} className="text-default-400" />
     </TouchableOpacity>
   );
 
   return (
-    <View className="flex-1 bg-gray-50 p-4 pt-12">
-      <Text className="text-3xl font-bold mb-6 text-gray-900">Exercises</Text>
+    <View className="flex-1 bg-background p-4 pt-12">
+      <Text className="text-3xl font-bold mb-6 text-foreground">Exercises</Text>
 
-      <View className="flex-row items-center bg-white p-3 rounded-xl border border-gray-200 mb-6">
-        <Ionicons name="search" size={20} color="#9ca3af" />
+      <View className="flex-row items-center bg-content1 p-3 rounded-xl border border-default-200 mb-6">
+        <Ionicons name="search" size={20} className="text-default-400" />
         <TextInput
-          className="flex-1 ml-3 text-lg"
+          className="flex-1 ml-3 text-lg text-foreground"
           placeholder="Search exercises..."
+          placeholderTextColor="#9ca3af"
           value={search}
           onChangeText={setSearch}
         />

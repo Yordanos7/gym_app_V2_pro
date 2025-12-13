@@ -35,15 +35,16 @@ export default function SignIn() {
   };
 
   return (
-    <View className="flex-1 justify-center items-center bg-white p-6">
+    <View className="flex-1 justify-center items-center bg-background p-6">
       <Text className="text-3xl font-bold mb-8 text-primary">Gym App</Text>
       
       <View className="w-full space-y-4">
         <View>
-          <Text className="mb-2 text-gray-600">Email</Text>
+          <Text className="mb-2 text-default-500">Email</Text>
           <TextInput
-            className="w-full border border-gray-300 rounded-lg p-3"
+            className="w-full border border-default-200 rounded-lg p-3 text-foreground"
             placeholder="Enter your email"
+            placeholderTextColor="#9ca3af"
             value={email}
             onChangeText={setEmail}
             autoCapitalize="none"
@@ -52,10 +53,11 @@ export default function SignIn() {
         </View>
 
         <View>
-          <Text className="mb-2 text-gray-600">Password</Text>
+          <Text className="mb-2 text-default-500">Password</Text>
           <TextInput
-            className="w-full border border-gray-300 rounded-lg p-3"
+            className="w-full border border-default-200 rounded-lg p-3 text-foreground"
             placeholder="Enter your password"
+            placeholderTextColor="#9ca3af"
             value={password}
             onChangeText={setPassword}
             secureTextEntry
@@ -63,20 +65,20 @@ export default function SignIn() {
         </View>
 
         <TouchableOpacity
-          className={`w-full bg-blue-600 p-4 rounded-lg items-center ${loading ? "opacity-70" : ""}`}
+          className={`w-full bg-primary p-4 rounded-lg items-center ${loading ? "opacity-70" : ""}`}
           onPress={handleSignIn}
           disabled={loading}
         >
-          <Text className="text-white font-bold text-lg">
+          <Text className="text-primary-foreground font-bold text-lg">
             {loading ? "Signing In..." : "Sign In"}
           </Text>
         </TouchableOpacity>
 
         <View className="flex-row justify-center mt-4">
-          <Text className="text-gray-600">Don't have an account? </Text>
+          <Text className="text-default-500">Don't have an account? </Text>
           <Link href="/(auth)/sign-up" asChild>
             <TouchableOpacity>
-              <Text className="text-blue-600 font-bold">Sign Up</Text>
+              <Text className="text-primary font-bold">Sign Up</Text>
             </TouchableOpacity>
           </Link>
         </View>

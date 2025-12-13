@@ -11,13 +11,13 @@ export default function ProfileScreen() {
   };
 
   return (
-    <View className="flex-1 justify-center items-center bg-white">
-      <Text className="text-2xl font-bold mb-4">Profile</Text>
+    <View className="flex-1 justify-center items-center bg-background">
+      <Text className="text-2xl font-bold mb-4 text-foreground">Profile</Text>
       <TouchableOpacity 
-        className="bg-red-500 p-3 rounded-lg"
+        className="bg-danger p-3 rounded-lg"
         onPress={handleSignOut}
       >
-        <Text className="text-white font-bold">Sign Out</Text>
+        <Text className="text-danger-foreground font-bold">Sign Out</Text>
       </TouchableOpacity>
     </View>
   );
