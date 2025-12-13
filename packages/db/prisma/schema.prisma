@@ -1,0 +1,431 @@
+// ======================================================
+//  GENERATOR & DATABASE SOURCE
+// ======================================================
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/client"
+}
+datasource db {
+  provider = "postgresql"
+}
+
+
+// ======================================================
+//  USERS & AUTHENTICATION
+// ======================================================
+model User {
+  id        String        @id @default(uuid())
+  name      String?
+  email     String        @unique
+  password  String?
+  gender    String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  profile       UserProfile?
+  settings      UserSettings?
+  equipments    UserEquipment[]
+  programs      Program[]
+  workouts      WorkoutSession[]
+  bodyTrackings BodyTracking[]
+  weights       WeightEntry[]
+  meals         Meal[]
+  notifications Notification[]
+  achievements  UserAchievement[]
+  favorites     FavoriteExercise[]
+  chatMessages  AiChatMessage[]
+  streaks       DailyStreak[]
+  subscriptions Subscription[]
+  friendRequestsSent  Friendship[] @relation("FriendRequester")
+  friendRequestsReceived Friendship[] @relation("FriendAddressee")
+
+  emailVerified Boolean @default(false)
+  image         String?
+  sessions      Session[]
+  accounts      Account[]
+
+  @@map("user")
+}
+
+// ======================================================
+//  USER PROFILE
+// ======================================================
+model UserProfile {
+  id            String   @id @default(uuid())
+  userId        String   @unique
+  goal          Goal
+  level         Level
+  heightCm      Int?
+  weightKg      Float?
+  age           Int?
+  activityLevel ActivityLevel
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum Goal {
+  MUSCLE_GAIN
+  FAT_LOSS
+  STRENGTH
+  FITNESS
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+}
+
+enum ActivityLevel {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+// ======================================================
+//  USER SETTINGS
+// ======================================================
+model UserSettings {
+  id               String   @id @default(uuid())
+  userId           String   @unique
+  darkMode         Boolean  @default(false)
+  notificationsOn  Boolean  @default(true)
+  reminderTime     String?
+  language         String?  // en, am, etc.
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+// ======================================================
+//  USER EQUIPMENT
+// ======================================================
+model UserEquipment {
+  id        String   @id @default(uuid())
+  userId    String
+  name      String
+
+  user      User @relation(fields: [userId], references: [id])
+}
+
+// ======================================================
+//  PROGRAMS (Workout Plans)
+// ======================================================
+model Program {
+  id          String        @id @default(uuid())
+  userId      String?
+  name        String
+  description String?
+  difficulty  Level
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  user  User?         @relation(fields: [userId], references: [id])
+  days  ProgramDay[]
+}
+
+model ProgramDay {
+  id         String           @id @default(uuid())
+  programId  String
+  dayOfWeek  Int              // 0 = Sunday, 6 = Saturday
+  title      String
+
+  program Program           @relation(fields: [programId], references: [id])
+  exercises ProgramExercise[]
+}
+
+model ProgramExercise {
+  id           String     @id @default(uuid())
+  programDayId String
+  exerciseId   String
+
+  programDay ProgramDay @relation(fields: [programDayId], references: [id])
+  exercise    Exercise   @relation(fields: [exerciseId], references: [id])
+}
+
+// ======================================================
+//  EXERCISES + MUSCLES
+// ======================================================
+model Muscle {
+  id      String     @id @default(uuid())
+  name    String     @unique
+  primaryExercises   Exercise[] @relation("PrimaryMuscle")
+  secondaryExercises Exercise[] @relation("SecondaryMuscle")
+}
+
+model Exercise {
+  id                String      @id @default(uuid())
+  name              String
+  description       String?
+  videoUrl          String?
+  equipment         String?
+  primaryMuscleId   String
+  secondaryMuscleId String?
+
+  primaryMuscle   Muscle @relation("PrimaryMuscle", fields: [primaryMuscleId], references: [id])
+  secondaryMuscle Muscle? @relation("SecondaryMuscle", fields: [secondaryMuscleId], references: [id])
+
+  programItems ProgramExercise[]
+  workoutItems WorkoutExercise[]
+  favorites    FavoriteExercise[]
+}
+
+// ======================================================
+//  WORKOUT SESSIONS
+// ======================================================
+model WorkoutSession {
+  id        String            @id @default(uuid())
+  userId    String
+  date      DateTime          @default(now())
+  notes     String?
+
+  user      User              @relation(fields: [userId], references: [id])
+  exercises WorkoutExercise[]
+}
+
+model WorkoutExercise {
+  id               String          @id @default(uuid())
+  workoutSessionId String
+  exerciseId       String
+
+  workoutSession WorkoutSession @relation(fields: [workoutSessionId], references: [id])
+  exercise       Exercise       @relation(fields: [exerciseId], references: [id])
+  sets           SetEntry[]
+}
+
+model SetEntry {
+  id                String @id @default(uuid())
+  workoutExerciseId String
+  reps              Int
+  weight            Float?
+  note              String?
+
+  workoutExercise WorkoutExercise @relation(fields: [workoutExerciseId], references: [id])
+}
+
+// ======================================================
+//  PROGRESS: BODY MEASUREMENTS + WEIGHT
+// ======================================================
+model BodyTracking {
+  id        String   @id @default(uuid())
+  userId    String
+  chest     Float?
+  shoulders Float?
+  arms      Float?
+  waist     Float?
+  legs      Float?
+  date      DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+model WeightEntry {
+  id        String   @id @default(uuid())
+  userId    String
+  weight    Float
+  date      DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+// ======================================================
+//  MEAL TRACKING
+// ======================================================
+model Meal {
+  id        String     @id @default(uuid())
+  userId    String
+  date      DateTime   @default(now())
+  type      MealType
+  calories  Int
+  protein   Int?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+// ======================================================
+//  NOTIFICATIONS
+// ======================================================
+model Notification {
+  id        String            @id @default(uuid())
+  userId    String
+  title     String
+  body      String?
+  type      NotificationType
+  isRead    Boolean           @default(false)
+  createdAt DateTime          @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum NotificationType {
+  WORKOUT_REMINDER
+  MEAL_REMINDER
+  PROGRESS_REMINDER
+  NEW_FEATURE
+  MESSAGE
+}
+
+// ======================================================
+//  ACHIEVEMENTS / BADGES
+// ======================================================
+model Achievement {
+  id          String            @id @default(uuid())
+  title       String
+  description String?
+  icon        String?
+  createdAt   DateTime          @default(now())
+
+  users UserAchievement[]
+}
+
+model UserAchievement {
+  id             String       @id @default(uuid())
+  userId         String
+  achievementId  String
+  achievedAt     DateTime     @default(now())
+
+  user         User         @relation(fields: [userId], references: [id])
+  achievement  Achievement  @relation(fields: [achievementId], references: [id])
+}
+
+// ======================================================
+//  FAVORITE EXERCISES
+// ======================================================
+model FavoriteExercise {
+  id         String   @id @default(uuid())
+  userId     String
+  exerciseId String
+  addedAt    DateTime @default(now())
+
+  user     User     @relation(fields: [userId], references: [id])
+  exercise Exercise @relation(fields: [exerciseId], references: [id])
+}
+
+// ======================================================
+//  AI CHAT (AI TRAINER)
+// ======================================================
+model AiChatMessage {
+  id        String    @id @default(uuid())
+  userId    String
+  role      ChatRole
+  message   String
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum ChatRole {
+  USER
+  AI
+}
+
+// ======================================================
+//  DAILY STREAK (HABIT SYSTEM)
+// ======================================================
+model DailyStreak {
+  id        String   @id @default(uuid())
+  userId    String
+  date      DateTime
+  completed Boolean  @default(false)
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+// ======================================================
+//  SUBSCRIPTIONS
+// ======================================================
+model Subscription {
+  id        String             @id @default(uuid())
+  userId    String
+  plan      SubscriptionPlan
+  status    SubscriptionStatus @default(ACTIVE)
+  startDate DateTime           @default(now())
+  endDate   DateTime?
+
+  user User @relation(fields: [userId], references: [id])
+}
+
+enum SubscriptionPlan {
+  FREE
+  PRO
+  ELITE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  EXPIRED
+  CANCELED
+}
+
+// ======================================================
+//  SOCIAL / FRIEND REQUESTS
+// ======================================================
+model Friendship {
+  id          String        @id @default(uuid())
+  requesterId String
+  addresseeId String
+  status      FriendStatus
+  createdAt   DateTime      @default(now())
+
+  requester User @relation("FriendRequester", fields: [requesterId], references: [id])
+  addressee User @relation("FriendAddressee", fields: [addresseeId], references: [id])
+}
+
+enum FriendStatus {
+  PENDING
+  ACCEPTED
+  BLOCKED
+}
+
+// ======================================================
+//  BETTER-AUTH MODELS
+// ======================================================
+model Session {
+  id        String   @id @default(uuid())
+  userId    String
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  token     String?  @unique
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id           String    @id @default(uuid())
+  userId       String
+  accountId    String
+  providerId   String
+  accessToken  String?
+  refreshToken String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope        String?
+  idToken      String?
+  password     String?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("account")
+}
+
+model Verification {
+  id         String    @id @default(uuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime? @default(now())
+  updatedAt  DateTime? @updatedAt
+
+  @@map("verification")
+}

@@ -8,14 +8,30 @@ const app = express();
 
 app.use(
 	cors({
-		origin: process.env.CORS_ORIGIN || "",
+		origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",") : [],
 		methods: ["GET", "POST", "OPTIONS"],
 		allowedHeaders: ["Content-Type", "Authorization"],
 		credentials: true,
 	}),
 );
 
+import profileRouter from "./routes/profile";
+
+import dashboardRouter from "./routes/dashboard";
+import exercisesRouter from "./routes/exercises";
+import programsRouter from "./routes/programs";
+import workoutSessionRouter from "./routes/workout-session";
+import progressRouter from "./routes/progress";
+import nutritionRouter from "./routes/nutrition";
+
 app.all("/api/auth{/*path}", toNodeHandler(auth));
+app.use("/api/profile", profileRouter);
+app.use("/api/dashboard", dashboardRouter);
+app.use("/api/exercises", exercisesRouter);
+app.use("/api/programs", programsRouter);
+app.use("/api/workout-session", workoutSessionRouter);
+app.use("/api/progress", progressRouter);
+app.use("/api/nutrition", nutritionRouter);
 
 app.use(express.json());
 
