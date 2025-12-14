@@ -1,9 +1,23 @@
 import { Tabs } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { useThemeColor } from "heroui-native";
 
 export default function TabLayout() {
+  const backgroundColor = useThemeColor("background");
+  const foregroundColor = useThemeColor("foreground");
+
   return (
-    <Tabs screenOptions={{ headerShown: false, tabBarActiveTintColor: "#2563eb" }}>
+    <Tabs 
+      screenOptions={{ 
+        headerShown: false, 
+        tabBarActiveTintColor: "#2563eb",
+        tabBarInactiveTintColor: foregroundColor,
+        tabBarStyle: {
+          backgroundColor: backgroundColor,
+          borderTopColor: "transparent", // Optional: remove border or style it
+        }
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{

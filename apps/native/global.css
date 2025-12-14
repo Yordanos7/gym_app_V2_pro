@@ -3,3 +3,33 @@
 @import 'heroui-native/styles';
 
 @source './node_modules/heroui-native/lib';
+
+:root {
+  --background: 255 255 255;
+  --foreground: 24 24 27; /* zinc-900 */
+  
+  --content1: 255 255 255;
+  --content1-foreground: 24 24 27;
+
+  --primary: 37 99 235; /* blue-600 */
+  --primary-foreground: 255 255 255;
+
+  --default-100: 244 244 245; /* zinc-100 */
+  --default-200: 228 228 231; /* zinc-200 */
+  --default-500: 113 113 122; /* zinc-500 */
+}
+
+.dark {
+  --background: 0 0 0;
+  --foreground: 255 255 255;
+
+  --content1: 24 24 27; /* zinc-900 */
+  --content1-foreground: 255 255 255;
+
+  --primary: 59 130 246; /* blue-500 */
+  --primary-foreground: 255 255 255;
+
+  --default-100: 39 39 42; /* zinc-800 */
+  --default-200: 63 63 70; /* zinc-700 */
+  --default-500: 161 161 170; /* zinc-400 */
+}

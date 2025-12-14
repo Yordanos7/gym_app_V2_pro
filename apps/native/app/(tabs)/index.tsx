@@ -66,7 +66,6 @@ export default function HomeScreen() {
             <Text className="text-3xl font-bold text-foreground">{data?.userName || "User"}</Text>
           </View>
           <View className="flex-row items-center gap-2">
-            <ThemeToggle />
             <TouchableOpacity className="bg-default-100 p-2 rounded-full">
               <Ionicons name="notifications-outline" size={24} className="text-foreground" />
             </TouchableOpacity>
@@ -108,10 +107,17 @@ export default function HomeScreen() {
             <Ionicons name="calendar-outline" size={48} className="text-default-400" />
             <Text className="text-default-500 mt-4 text-center">No workout scheduled for today</Text>
             <TouchableOpacity 
-              className="mt-4 bg-primary px-6 py-3 rounded-xl"
+              className="mt-4 bg-primary px-6 py-3 rounded-xl mb-3"
               onPress={() => router.push("/workout/quick")}
             >
               <Text className="text-primary-foreground font-bold">Start Quick Workout</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity 
+              className="bg-default-100 px-6 py-3 rounded-xl"
+              onPress={() => router.push("/workout/schedule")}
+            >
+              <Text className="text-foreground font-bold">Schedule Workout</Text>
             </TouchableOpacity>
           </View>
         )}

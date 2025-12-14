@@ -1,7 +1,7 @@
 import "dotenv/config";
 import cors from "cors";
 import express from "express";
-import { auth } from "@gymApp/auth";
+import { auth } from "@gymApp/auth"; // this thing is come from the  better auth 
 import { toNodeHandler } from "better-auth/node";
 
 const app = express();

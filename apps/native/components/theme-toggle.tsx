@@ -16,6 +16,7 @@ export function ThemeToggle() {
 				if (Platform.OS === "ios") {
 					Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
 				}
+                // console.log("Toggling theme. Current:", isLight ? "Light" : "Dark");
 				toggleTheme();
 			}}
 			className="px-2.5"

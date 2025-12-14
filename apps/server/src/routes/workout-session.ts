@@ -11,13 +11,13 @@ router.post("/", async (req, res) => {
     if (!session) return res.status(401).json({ error: "Unauthorized" });
 
     const { id: userId } = session.user;
-    const { notes } = req.body;
+    const { notes, date } = req.body;
 
     const workoutSession = await prisma.workoutSession.create({
       data: {
         userId,
         notes,
-        date: new Date(),
+        date: date ? new Date(date) : new Date(),
       },
     });
 

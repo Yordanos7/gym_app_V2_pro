@@ -26,9 +26,29 @@ router.get("/", async (req, res) => {
       where: { userId, completed: true },
     });
 
-    // Fetch today's workout (mock logic for now)
-    // In a real app, we'd query based on the active program and day of week
-    const todaysWorkout = null; 
+    // Fetch today's workout
+    const startOfDay = new Date();
+    startOfDay.setHours(0, 0, 0, 0);
+    
+    const endOfDay = new Date();
+    endOfDay.setHours(23, 59, 59, 999);
+
+    const todaysWorkout = await prisma.workoutSession.findFirst({
+      where: {
+        userId,
+        date: {
+          gte: startOfDay,
+          lte: endOfDay,
+        },
+      },
+      include: {
+        exercises: {
+          include: {
+            exercise: true,
+          }
+        }
+      }
+    }); 
 
     res.json({
       userName: session.user.name,
