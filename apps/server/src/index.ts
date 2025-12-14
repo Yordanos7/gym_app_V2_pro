@@ -15,6 +15,8 @@ app.use(
 	}),
 );
 
+app.use(express.json());
+
 import profileRouter from "./routes/profile";
 
 import dashboardRouter from "./routes/dashboard";
@@ -33,7 +35,7 @@ app.use("/api/workout-session", workoutSessionRouter);
 app.use("/api/progress", progressRouter);
 app.use("/api/nutrition", nutritionRouter);
 
-app.use(express.json());
+
 
 app.get("/", (_req, res) => {
 	res.status(200).send("OK");

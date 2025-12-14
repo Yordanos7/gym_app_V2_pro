@@ -17,6 +17,7 @@ export default function ScheduleWorkoutScreen() {
       const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ 
             notes: notes || "Scheduled Workout",
             date: date.toISOString() 
@@ -37,10 +38,17 @@ export default function ScheduleWorkoutScreen() {
     }
   };
 
+  const [mode, setMode] = useState<'date' | 'time'>('date');
+
   const onChangeDate = (event: any, selectedDate?: Date) => {
     const currentDate = selectedDate || date;
     setShowDatePicker(Platform.OS === 'ios');
     setDate(currentDate);
+  };
+
+  const showMode = (currentMode: 'date' | 'time') => {
+    setShowDatePicker(true);
+    setMode(currentMode);
   };
 
   return (
@@ -54,27 +62,41 @@ export default function ScheduleWorkoutScreen() {
 
       <Text className="text-3xl font-bold text-foreground mb-8">Plan Your Grind</Text>
 
-      <View className="mb-6">
-        <Text className="text-default-500 mb-2 font-semibold">Date</Text>
-        <TouchableOpacity 
-            className="bg-content1 p-4 rounded-xl border border-default-200 flex-row items-center justify-between"
-            onPress={() => setShowDatePicker(true)}
-        >
-            <Text className="text-foreground text-lg">{date.toLocaleDateString()}</Text>
-            <Ionicons name="calendar" size={24} className="text-primary" />
-        </TouchableOpacity>
-        
-        {showDatePicker && (
-            <DateTimePicker
-                testID="dateTimePicker"
-                value={date}
-                mode="date"
-                display="default"
-                onChange={onChangeDate}
-                minimumDate={new Date()}
-            />
-        )}
+      <View className="flex-row justify-between mb-6 space-x-4">
+        <View className="flex-1">
+            <Text className="text-default-500 mb-2 font-semibold">Date</Text>
+            <TouchableOpacity 
+                className="bg-content1 p-4 rounded-xl border border-default-200 flex-row items-center justify-between"
+                onPress={() => showMode('date')}
+            >
+                <Text className="text-foreground text-sm">{date.toLocaleDateString()}</Text>
+                <Ionicons name="calendar" size={20} className="text-primary" />
+            </TouchableOpacity>
+        </View>
+
+        <View className="flex-1">
+            <Text className="text-default-500 mb-2 font-semibold">Time</Text>
+            <TouchableOpacity 
+                className="bg-content1 p-4 rounded-xl border border-default-200 flex-row items-center justify-between"
+                onPress={() => showMode('time')}
+            >
+                <Text className="text-foreground text-sm">{date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
+                <Ionicons name="time" size={20} className="text-primary" />
+            </TouchableOpacity>
+        </View>
       </View>
+        
+      {showDatePicker && (
+        <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode={mode}
+            is24Hour={true}
+            display="default"
+            onChange={onChangeDate}
+            minimumDate={mode === 'date' ? new Date() : undefined}
+        />
+      )}
 
       <View className="mb-8">
         <Text className="text-default-500 mb-2 font-semibold">Notes (Optional)</Text>

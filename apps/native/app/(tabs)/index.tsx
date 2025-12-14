@@ -21,6 +21,7 @@ export default function HomeScreen() {
   const fetchDashboard = async () => {
     try {
       const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/dashboard`, {
+        credentials: "include",
         headers: {
             // Add auth headers if needed, relying on cookie for now
         }
