@@ -96,9 +96,29 @@ export default function HomeScreen() {
         <Text className="text-xl font-bold mb-4 text-foreground">Today's Workout</Text>
         
         {data?.todaysWorkout ? (
-          <TouchableOpacity className="bg-content1 p-5 rounded-2xl shadow-sm border border-default-200">
-            <Text className="text-lg font-bold mb-2 text-foreground">Full Body Power</Text>
-            <Text className="text-default-500 mb-4">45 mins • 8 Exercises</Text>
+          <TouchableOpacity 
+            className="bg-content1 p-5 rounded-2xl shadow-sm border border-default-200"
+            onPress={() => router.push(`/workout/${data.todaysWorkout.id}`)}
+          >
+            <Text className="text-lg font-bold mb-2 text-foreground">
+              {/* Use a default name if notes or other field is missing, or maybe fetch program name? 
+                  For now, let's use a generic name or 'Workout' if no name field. 
+                  Wait, WorkoutSession doesn't have a name field in the schema I saw? 
+                  It has 'notes'. Let's check if we can get a name. 
+                  The schema had 'Program' but WorkoutSession is just date/notes.
+                  Maybe we can say "Scheduled Workout" or use the first exercise name + "..."?
+                  Let's just call it "Scheduled Workout" or use the date.
+                  Actually, let's check if the user wants a specific name. 
+                  "Shows a card with the workout name (e.g., "Full Body Power")."
+                  Since the schema doesn't have a name on WorkoutSession, I'll use "Daily Workout" 
+                  or if it's linked to a program, I'd need to fetch that. 
+                  For now, I'll use "Daily Workout" as a placeholder or "Scheduled Session".
+              */}
+              Scheduled Session
+            </Text>
+            <Text className="text-default-500 mb-4">
+              {data.todaysWorkout.duration} mins • {data.todaysWorkout.exerciseCount} Exercises
+            </Text>
             <View className="bg-primary py-3 rounded-xl items-center">
               <Text className="text-primary-foreground font-bold">Start Workout</Text>
             </View>

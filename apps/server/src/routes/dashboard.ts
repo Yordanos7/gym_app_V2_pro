@@ -45,16 +45,35 @@ router.get("/", async (req, res) => {
         exercises: {
           include: {
             exercise: true,
+            sets: true,
           }
         }
       }
     }); 
 
+    let duration = 0;
+    let exerciseCount = 0;
+
+    if (todaysWorkout) {
+      exerciseCount = todaysWorkout.exercises.length;
+      // Estimate duration: 5 mins per exercise + 2 mins per set
+      // Or simpler: 45 mins base if > 0, or just sum sets. 
+      // Let's do: 5 mins per exercise as a rough estimate if no sets, 
+      // or better: count total sets * 3 mins.
+      const totalSets = todaysWorkout.exercises.reduce((acc, ex) => acc + ex.sets.length, 0);
+      duration = totalSets > 0 ? totalSets * 4 : exerciseCount * 10; // Fallback to 10 mins per exercise if no sets logged yet
+      if (duration === 0 && exerciseCount > 0) duration = 45; // Default if just planned
+    }
+
     res.json({
       userName: session.user.name,
       streak,
       goal: profile?.goal,
-      todaysWorkout,
+      todaysWorkout: todaysWorkout ? {
+        ...todaysWorkout,
+        exerciseCount,
+        duration,
+      } : null,
     });
   } catch (error) {
     console.error("Dashboard error:", error);
