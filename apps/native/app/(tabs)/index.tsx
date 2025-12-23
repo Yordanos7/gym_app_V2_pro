@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, RefreshControl } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, RefreshControl, StatusBar } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { authClient } from "@/lib/auth-client";
 import { useRouter } from "expo-router";
-import { ThemeToggle } from "@/components/theme-toggle";
+import Animated, { FadeIn, FadeInUp } from "react-native-reanimated";
+
+import MotivationalHero from "@/components/MotivationalHero";
+import { AnimatedStatsGrid } from "@/components/AnimatedStats";
 
 type DashboardData = {
   userName: string;
@@ -12,19 +14,25 @@ type DashboardData = {
   todaysWorkout: any;
 };
 
+const MOTIVATIONAL_QUOTES = [
+  "Suffer the pain of discipline or suffer the pain of regret.",
+  "The only bad workout is the one that didn't happen.",
+  "Your only limit is you.",
+  "Don't stop when you're tired. Stop when you're done.",
+  "Strength within, pride throughout."
+];
+
 export default function HomeScreen() {
   const router = useRouter();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [quote] = useState(MOTIVATIONAL_QUOTES[Math.floor(Math.random() * MOTIVATIONAL_QUOTES.length)]);
 
   const fetchDashboard = async () => {
     try {
       const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/dashboard`, {
-        credentials: "include",
-        headers: {
-            // Add auth headers if needed, relying on cookie for now
-        }
+        credentials: "include"
       });
       if (response.ok) {
         const json = await response.json();
@@ -50,120 +58,135 @@ export default function HomeScreen() {
   if (loading) {
     return (
       <View className="flex-1 justify-center items-center bg-background">
-        <Text className="text-foreground">Loading...</Text>
+        <Animated.View entering={FadeIn.duration(1000)} className="items-center">
+            <View className="w-16 h-16 bg-primary rounded-full items-center justify-center animate-pulse">
+                <Ionicons name="barbell" size={32} color="#0A0A0A" />
+            </View>
+            <Text className="text-primary mt-4 font-black tracking-widest uppercase">Initializing Grit...</Text>
+        </Animated.View>
       </View>
     );
   }
 
+  const stats = [
+    { label: "Streak", value: `${data?.streak || 0} Days`, icon: "flame" as const, index: 0 },
+    { label: "Goal", value: data?.goal?.replace("_", " ") || "Body Build", icon: "trophy" as const, index: 1 },
+    { label: "Water", value: "2.5L", icon: "water" as const, index: 2 },
+  ];
+
   return (
-    <ScrollView 
-      className="flex-1 bg-background"
-      refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} tintColor={loading ? undefined : "#2563eb"} />}
-    >
-      <View className="p-6 pt-12 bg-content1 rounded-b-3xl shadow-sm">
-        <View className="flex-row justify-between items-center mb-6">
-          <View>
-            <Text className="text-default-500 text-lg">Welcome back,</Text>
-            <Text className="text-3xl font-bold text-foreground">{data?.userName || "User"}</Text>
-          </View>
-          <View className="flex-row items-center gap-2">
-            <TouchableOpacity className="bg-default-100 p-2 rounded-full">
-              <Ionicons name="notifications-outline" size={24} className="text-foreground" />
-            </TouchableOpacity>
-          </View>
-        </View>
+    <View className="flex-1 bg-background dark">
+      <StatusBar barStyle="light-content" />
+      <ScrollView 
+        className="flex-1"
+        contentContainerStyle={{ paddingBottom: 100 }}
+        refreshControl={
+            <RefreshControl 
+                refreshing={refreshing} 
+                onRefresh={onRefresh} 
+                tintColor="#C6FF00" 
+                progressViewOffset={50}
+            />
+        }
+      >
+        <MotivationalHero 
+            userName={data?.userName || "Warrior"} 
+            quote={quote}
+        />
 
-        <View className="flex-row space-x-4">
-          <View className="flex-1 bg-primary-50 p-4 rounded-xl border border-primary-100">
-            <View className="flex-row items-center mb-2">
-              <Ionicons name="flame" size={20} color="#2563eb" />
-              <Text className="ml-2 text-primary-700 font-semibold">Streak</Text>
-            </View>
-            <Text className="text-2xl font-bold text-primary-900">{data?.streak || 0} Days</Text>
-          </View>
-          
-          <View className="flex-1 bg-secondary-50 p-4 rounded-xl border border-secondary-100">
-            <View className="flex-row items-center mb-2">
-              <Ionicons name="trophy" size={20} color="#9333ea" />
-              <Text className="ml-2 text-secondary-700 font-semibold">Goal</Text>
-            </View>
-            <Text className="text-lg font-bold text-secondary-900 capitalize">{data?.goal?.replace("_", " ") || "Set Goal"}</Text>
-          </View>
-        </View>
-      </View>
+        <AnimatedStatsGrid stats={stats} />
 
-      <View className="p-6">
-        <Text className="text-xl font-bold mb-4 text-foreground">Today's Workout</Text>
-        
-        {data?.todaysWorkout ? (
-          <TouchableOpacity 
-            className="bg-content1 p-5 rounded-2xl shadow-sm border border-default-200"
-            onPress={() => router.push(`/workout/${data.todaysWorkout.id}`)}
-          >
-            <Text className="text-lg font-bold mb-2 text-foreground">
-              {/* Use a default name if notes or other field is missing, or maybe fetch program name? 
-                  For now, let's use a generic name or 'Workout' if no name field. 
-                  Wait, WorkoutSession doesn't have a name field in the schema I saw? 
-                  It has 'notes'. Let's check if we can get a name. 
-                  The schema had 'Program' but WorkoutSession is just date/notes.
-                  Maybe we can say "Scheduled Workout" or use the first exercise name + "..."?
-                  Let's just call it "Scheduled Workout" or use the date.
-                  Actually, let's check if the user wants a specific name. 
-                  "Shows a card with the workout name (e.g., "Full Body Power")."
-                  Since the schema doesn't have a name on WorkoutSession, I'll use "Daily Workout" 
-                  or if it's linked to a program, I'd need to fetch that. 
-                  For now, I'll use "Daily Workout" as a placeholder or "Scheduled Session".
-              */}
-              Scheduled Session
-            </Text>
-            <Text className="text-default-500 mb-4">
-              {data.todaysWorkout.duration} mins • {data.todaysWorkout.exerciseCount} Exercises
-            </Text>
-            <View className="bg-primary py-3 rounded-xl items-center">
-              <Text className="text-primary-foreground font-bold">Start Workout</Text>
+        <View className="px-6 mt-8">
+          <Animated.View entering={FadeInUp.delay(400)}>
+            <View className="flex-row justify-between items-end mb-4">
+                <Text className="text-white text-2xl font-black italic uppercase tracking-tighter">Your Grind</Text>
+                <TouchableOpacity onPress={() => router.push("/(tabs)/workouts")}>
+                    <Text className="text-primary text-xs font-bold uppercase tracking-widest">View All</Text>
+                </TouchableOpacity>
             </View>
-          </TouchableOpacity>
-        ) : (
-          <View className="bg-content1 p-6 rounded-2xl shadow-sm border border-default-200 items-center">
-            <Ionicons name="calendar-outline" size={48} className="text-default-400" />
-            <Text className="text-default-500 mt-4 text-center">No workout scheduled for today</Text>
-            <TouchableOpacity 
-              className="mt-4 bg-primary px-6 py-3 rounded-xl mb-3"
-              onPress={() => router.push("/workout/quick")}
-            >
-              <Text className="text-primary-foreground font-bold">Start Quick Workout</Text>
-            </TouchableOpacity>
             
-            <TouchableOpacity 
-              className="bg-default-100 px-6 py-3 rounded-xl"
-              onPress={() => router.push("/workout/schedule")}
-            >
-              <Text className="text-foreground font-bold">Schedule Workout</Text>
-            </TouchableOpacity>
-          </View>
-        )}
+            {data?.todaysWorkout ? (
+              <TouchableOpacity 
+                activeOpacity={0.9}
+                className="bg-content1 border border-white/5 p-6 rounded-[32px] shadow-2xl overflow-hidden"
+                onPress={() => router.push(`/workout/${data.todaysWorkout.id}`)}
+              >
+                <View className="flex-row justify-between items-start mb-4">
+                    <View>
+                        <Text className="text-primary text-xs font-black uppercase tracking-[3px] mb-1">Workout of the Day</Text>
+                        <Text className="text-white text-2xl font-bold">Scheduled Session</Text>
+                    </View>
+                    <View className="bg-primary/10 p-2 rounded-full">
+                        <Ionicons name="play" size={24} color="#C6FF00" />
+                    </View>
+                </View>
 
-        <Text className="text-xl font-bold mt-8 mb-4 text-foreground">Quick Actions</Text>
-        <View className="flex-row flex-wrap justify-between">
-          {[
-            { icon: "barbell", label: "Log Workout", color: "bg-orange-100", iconColor: "#ea580c", route: "/workout/quick" },
-            { icon: "nutrition", label: "Log Meal", color: "bg-green-100", iconColor: "#16a34a", route: "/nutrition/log" },
-            { icon: "body", label: "Body Stats", color: "bg-blue-100", iconColor: "#2563eb", route: "/(tabs)/progress" },
-            { icon: "water", label: "Water", color: "bg-cyan-100", iconColor: "#0891b2", route: "/nutrition/log" },
-          ].map((action, index) => (
-            <TouchableOpacity 
-              key={index} 
-              className="w-[48%] bg-content1 p-4 rounded-xl mb-4 shadow-sm border border-default-200 flex-row items-center"
-              onPress={() => router.push(action.route as any)}
-            >
-              <View className={`${action.color} p-2 rounded-lg mr-3`}>
-                <Ionicons name={action.icon as any} size={20} color={action.iconColor} />
+                <View className="flex-row gap-4 mb-6">
+                    <View className="flex-row items-center bg-white/5 px-3 py-1 rounded-full">
+                        <Ionicons name="time-outline" size={14} color="#A1A1AA" />
+                        <Text className="text-zinc-400 text-xs ml-1 font-medium">{data.todaysWorkout.duration}m</Text>
+                    </View>
+                    <View className="flex-row items-center bg-white/5 px-3 py-1 rounded-full">
+                        <Ionicons name="flash-outline" size={14} color="#A1A1AA" />
+                        <Text className="text-zinc-400 text-xs ml-1 font-medium">{data.todaysWorkout.exerciseCount} Ex</Text>
+                    </View>
+                </View>
+
+                <View className="bg-primary h-14 rounded-2xl items-center justify-center shadow-lg shadow-primary/30">
+                  <Text className="text-obsidian font-black uppercase tracking-widest">Activate Workout</Text>
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <View className="bg-content1/40 border border-dashed border-white/10 p-8 rounded-[32px] items-center">
+                <View className="w-16 h-16 bg-white/5 rounded-full items-center justify-center mb-4">
+                    <Ionicons name="calendar-outline" size={32} color="#52525B" />
+                </View>
+                <Text className="text-zinc-400 text-center mb-6 font-medium">Rest day? Or just getting started?</Text>
+                
+                <View className="flex-row gap-3">
+                    <TouchableOpacity 
+                        className="bg-primary flex-1 h-12 rounded-xl items-center justify-center"
+                        onPress={() => router.push("/workout/quick")}
+                    >
+                        <Text className="text-obsidian font-bold text-xs uppercase tracking-wider">Quick Start</Text>
+                    </TouchableOpacity>
+                    
+                    <TouchableOpacity 
+                        className="bg-white/5 flex-1 h-12 rounded-xl items-center justify-center border border-white/10"
+                        onPress={() => router.push("/workout/schedule")}
+                    >
+                        <Text className="text-white font-bold text-xs uppercase tracking-wider">Schedule</Text>
+                    </TouchableOpacity>
+                </View>
               </View>
-              <Text className="font-semibold text-foreground">{action.label}</Text>
-            </TouchableOpacity>
-          ))}
+            )}
+          </Animated.View>
+
+          <Animated.View entering={FadeInUp.delay(600)} className="mt-10">
+            <Text className="text-white text-2xl font-black italic uppercase tracking-tighter mb-4">Quick Arsenal</Text>
+            <View className="flex-row flex-wrap justify-between">
+              {[
+                { icon: "barbell", label: "Log Lift", route: "/workout/quick" },
+                { icon: "nutrition", label: "Fuel Log", route: "/nutrition/log" },
+                { icon: "body", label: "Stats", route: "/(tabs)/progress" },
+                { icon: "water", label: "Hydrate", route: "/nutrition/log" },
+              ].map((action, index) => (
+                <TouchableOpacity 
+                  key={index} 
+                  activeOpacity={0.7}
+                  className="w-[48%] bg-content1/60 border border-white/5 p-4 rounded-2xl mb-4 flex-row items-center"
+                  onPress={() => router.push(action.route as any)}
+                >
+                  <View className="bg-primary/10 p-2 rounded-lg mr-3">
+                    <Ionicons name={action.icon as any} size={20} color="#C6FF00" />
+                  </View>
+                  <Text className="font-bold text-white text-xs uppercase tracking-wider">{action.label}</Text>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </Animated.View>
         </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }

@@ -11,8 +11,11 @@
   --content1: 255 255 255;
   --content1-foreground: 24 24 27;
 
-  --primary: 37 99 235; /* blue-600 */
-  --primary-foreground: 255 255 255;
+  --primary: 198 255 0; /* Electric Lime #C6FF00 */
+  --primary-foreground: 10 10 10; /* Deep Obsidian */
+
+  --obsidian: 10 10 10;
+  --lime: 198 255 0;
 
   --default-100: 244 244 245; /* zinc-100 */
   --default-200: 228 228 231; /* zinc-200 */
@@ -20,14 +23,14 @@
 }
 
 .dark {
-  --background: 0 0 0;
+  --background: 10 10 10; /* Deep Obsidian */
   --foreground: 255 255 255;
 
   --content1: 24 24 27; /* zinc-900 */
   --content1-foreground: 255 255 255;
 
-  --primary: 59 130 246; /* blue-500 */
-  --primary-foreground: 255 255 255;
+  --primary: 198 255 0; /* Electric Lime */
+  --primary-foreground: 10 10 10;
 
   --default-100: 39 39 42; /* zinc-800 */
   --default-200: 63 63 70; /* zinc-700 */

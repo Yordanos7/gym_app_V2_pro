@@ -18,6 +18,7 @@ router.post("/", async (req, res) => {
         userId,
         notes,
         date: date ? new Date(date) : new Date(),
+        status: 'STARTED',
       },
     });
 
@@ -94,7 +95,17 @@ router.post("/:sessionId/set", async (req, res) => {
 router.put("/:sessionId/finish", async (req, res) => {
     // In this simple schema, we just assume it's done. 
     // We could add an 'endedAt' field to WorkoutSession if needed.
-    res.json({ success: true });
+    const { sessionId } = req.params;
+    
+    const session = await prisma.workoutSession.update({
+      where: { id: sessionId },
+      data: {
+        status: 'COMPLETED',
+        endedAt: new Date(),
+      },
+    });
+
+    res.json(session);
 });
 
 export default router;
