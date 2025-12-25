@@ -99,9 +99,9 @@ export default function HomeScreen() {
         <View className="px-6 mt-8">
           <Animated.View entering={FadeInUp.delay(400)}>
             <View className="flex-row justify-between items-end mb-4">
-                <Text className="text-white text-2xl font-black italic uppercase tracking-tighter">Your Grind</Text>
+                <Text className="text-black text-2xl font-black italic uppercase tracking-tighter">Your Grind</Text>
                 <TouchableOpacity onPress={() => router.push("/(tabs)/workouts")}>
-                    <Text className="text-primary text-xs font-bold uppercase tracking-widest">View All</Text>
+                    <Text className="text-balck text-xs font-bold uppercase tracking-widest">View All</Text>
                 </TouchableOpacity>
             </View>
             
@@ -114,7 +114,7 @@ export default function HomeScreen() {
                 <View className="flex-row justify-between items-start mb-4">
                     <View>
                         <Text className="text-primary text-xs font-black uppercase tracking-[3px] mb-1">Workout of the Day</Text>
-                        <Text className="text-white text-2xl font-bold">Scheduled Session</Text>
+                        <Text className="text-black text-2xl font-bold">Scheduled Session</Text>
                     </View>
                     <View className="bg-primary/10 p-2 rounded-full">
                         <Ionicons name="play" size={24} color="#C6FF00" />
@@ -124,7 +124,7 @@ export default function HomeScreen() {
                 <View className="flex-row gap-4 mb-6">
                     <View className="flex-row items-center bg-white/5 px-3 py-1 rounded-full">
                         <Ionicons name="time-outline" size={14} color="#A1A1AA" />
-                        <Text className="text-zinc-400 text-xs ml-1 font-medium">{data.todaysWorkout.duration}m</Text>
+                        <Text className="text-zinc-800 text-xs ml-1 font-medium">{data.todaysWorkout.duration}m</Text>
                     </View>
                     <View className="flex-row items-center bg-white/5 px-3 py-1 rounded-full">
                         <Ionicons name="flash-outline" size={14} color="#A1A1AA" />
@@ -155,7 +155,7 @@ export default function HomeScreen() {
                         className="bg-white/5 flex-1 h-12 rounded-xl items-center justify-center border border-white/10"
                         onPress={() => router.push("/workout/schedule")}
                     >
-                        <Text className="text-white font-bold text-xs uppercase tracking-wider">Schedule</Text>
+                        <Text className="text-black font-bold text-xs uppercase tracking-wider">Schedule</Text>
                     </TouchableOpacity>
                 </View>
               </View>
@@ -163,7 +163,7 @@ export default function HomeScreen() {
           </Animated.View>
 
           <Animated.View entering={FadeInUp.delay(600)} className="mt-10">
-            <Text className="text-white text-2xl font-black italic uppercase tracking-tighter mb-4">Quick Arsenal</Text>
+            <Text className="text-black text-2xl font-black italic uppercase tracking-tighter mb-4">Quick Arsenal</Text>
             <View className="flex-row flex-wrap justify-between">
               {[
                 { icon: "barbell", label: "Log Lift", route: "/workout/quick" },
@@ -178,9 +178,9 @@ export default function HomeScreen() {
                   onPress={() => router.push(action.route as any)}
                 >
                   <View className="bg-primary/10 p-2 rounded-lg mr-3">
-                    <Ionicons name={action.icon as any} size={20} color="#C6FF00" />
+                    <Ionicons name={action.icon as any} size={20} color="#2fbe0bff" />
                   </View>
-                  <Text className="font-bold text-white text-xs uppercase tracking-wider">{action.label}</Text>
+                  <Text className="font-bold text-black text-xs uppercase tracking-wider">{action.label}</Text>
                 </TouchableOpacity>
               ))}
             </View>

@@ -4,6 +4,31 @@ import { auth } from "@gymApp/auth";
 
 const router = Router();
 
+// Get a specific workout session
+router.get("/:sessionId", async (req, res) => {
+  try {
+    const { sessionId } = req.params;
+    const session = await prisma.workoutSession.findUnique({
+      where: { id: sessionId },
+      include: {
+        exercises: {
+            include: {
+                exercise: true,
+                sets: true
+            }
+        }
+      }
+    });
+    
+    if (!session) return res.status(404).json({ error: "Session not found" });
+
+    res.json(session);
+  } catch (error) {
+    console.error("Get session error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 // Start a workout session
 router.post("/", async (req, res) => {
   try {
