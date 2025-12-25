@@ -22,12 +22,22 @@ export default function ActiveWorkoutScreen() {
         const res = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          credentials: "include",
           body: JSON.stringify({ notes }),
         });
+
+        if (!res.ok) {
+           const errText = await res.text();
+           console.error("Failed to create session:", errText);
+           throw new Error("Failed to create session");
+        }
+
         const newSession = await res.json();
         setSession(newSession);
 
-        const exRes = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/exercises`);
+        const exRes = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/exercises`, {
+             credentials: "include" 
+        });
         const exercisesData = await exRes.json();
         setAllExercises(exercisesData);
         
@@ -79,6 +89,7 @@ export default function ActiveWorkoutScreen() {
       await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session/${session.id}/set`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include",
         body: JSON.stringify({ exerciseId, reps, weight }),
       });
       // Trigger Timer
@@ -93,6 +104,7 @@ export default function ActiveWorkoutScreen() {
     try {
       await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session/${session.id}/finish`, {
         method: "PUT",
+        credentials: "include",
         });
       router.replace(`/workout/summary?sessionId=${session.id}`);
     } catch (error) {

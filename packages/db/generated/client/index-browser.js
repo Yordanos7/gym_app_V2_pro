@@ -200,7 +200,9 @@ exports.Prisma.WorkoutSessionScalarFieldEnum = {
   id: 'id',
   userId: 'userId',
   date: 'date',
-  notes: 'notes'
+  notes: 'notes',
+  status: 'status',
+  endedAt: 'endedAt'
 };
 
 exports.Prisma.WorkoutExerciseScalarFieldEnum = {
@@ -375,6 +377,12 @@ exports.ActivityLevel = exports.$Enums.ActivityLevel = {
   LOW: 'LOW',
   MEDIUM: 'MEDIUM',
   HIGH: 'HIGH'
+};
+
+exports.WorkoutStatus = exports.$Enums.WorkoutStatus = {
+  STARTED: 'STARTED',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED'
 };
 
 exports.MealType = exports.$Enums.MealType = {

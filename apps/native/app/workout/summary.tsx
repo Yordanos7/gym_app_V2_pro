@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, StatusBar } from "react-native";
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter, useLocalSearchParams, Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
@@ -16,7 +16,9 @@ export default function WorkoutSummaryScreen() {
     
     const fetchSession = async () => {
       try {
-        const res = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session/${sessionId}`);
+        const res = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session/${sessionId}`, {
+            credentials: "include"
+        });
         if(res.ok) {
             const data = await res.json();
             setSession(data);
@@ -63,6 +65,7 @@ export default function WorkoutSummaryScreen() {
   return (
     <View className="flex-1 bg-black">
       <StatusBar barStyle="light-content" />
+      <Stack.Screen options={{ headerShown: false }} />
       <LinearGradient
         colors={['#18181b', '#000000']}
         className="absolute inset-0"

@@ -180,6 +180,15 @@ model WorkoutSession {
 
   user      User              @relation(fields: [userId], references: [id])
   exercises WorkoutExercise[]
+
+  status  WorkoutStatus @default(STARTED)
+  endedAt DateTime?
+}
+
+enum WorkoutStatus {
+  STARTED
+  COMPLETED
+  CANCELLED
 }
 
 model WorkoutExercise {
