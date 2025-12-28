@@ -3,6 +3,7 @@ import { View, Text, ScrollView, TouchableOpacity, RefreshControl, StatusBar } f
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import Animated, { FadeIn, FadeInUp } from "react-native-reanimated";
+import { useSession } from "@/lib/use-session";
 
 import MotivationalHero from "@/components/MotivationalHero";
 import { AnimatedStatsGrid } from "@/components/AnimatedStats";
@@ -24,6 +25,7 @@ const MOTIVATIONAL_QUOTES = [
 
 export default function HomeScreen() {
   const router = useRouter();
+  const { data: session } = useSession();
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -90,7 +92,7 @@ export default function HomeScreen() {
         }
       >
         <MotivationalHero 
-            userName={data?.userName || "Warrior"} 
+            userName={session?.user?.name || data?.userName || "Warrior"} 
             quote={quote}
         />
 

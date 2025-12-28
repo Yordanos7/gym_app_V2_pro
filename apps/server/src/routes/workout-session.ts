@@ -33,7 +33,11 @@ router.get("/:sessionId", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const session = await auth.api.getSession({ headers: req.headers });
-    if (!session) return res.status(401).json({ error: "Unauthorized" });
+    if (!session) {
+        console.log("Auth Failed for Workout Session");
+        console.log("Headers:", JSON.stringify(req.headers, null, 2));
+        return res.status(401).json({ error: "Unauthorized" });
+    }
 
     const { id: userId } = session.user;
     const { notes, date } = req.body;

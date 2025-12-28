@@ -1,9 +1,11 @@
+
 import { View, Text, TouchableOpacity, ScrollView, ActivityIndicator, StatusBar } from "react-native";
 import { useRouter, useLocalSearchParams, Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useState } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeInUp, FadeInDown } from "react-native-reanimated";
+import { authFetch } from "@/lib/api";
 
 export default function WorkoutSummaryScreen() {
   const router = useRouter();
@@ -16,9 +18,7 @@ export default function WorkoutSummaryScreen() {
     
     const fetchSession = async () => {
       try {
-        const res = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session/${sessionId}`, {
-            credentials: "include"
-        });
+        const res = await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session/${sessionId}`);
         if(res.ok) {
             const data = await res.json();
             setSession(data);

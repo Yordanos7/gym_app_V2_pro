@@ -5,18 +5,47 @@ import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import Animated, { FadeInDown, FadeInUp, LayoutAnimationConfig } from "react-native-reanimated";
+import { useSession } from "@/lib/use-session";
 
 export default function ActiveWorkoutScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
-  const [session, setSession] = useState<any>(null);
+  const { data: session, isPending } = useSession();
+  const [workoutSession, setWorkoutSession] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [exercises, setExercises] = useState<any[]>([]);
   const [allExercises, setAllExercises] = useState<any[]>([]);
   const [timer, setTimer] = useState<{active: boolean, timeLeft: number}>({ active: false, timeLeft: 0 });
 
+  // Check authentication FIRST before doing anything
   useEffect(() => {
+    if (isPending) return; // Wait for session check to complete
+    
+    if (!session) {
+      // User is not authenticated, redirect immediately
+      Alert.alert(
+        "Authentication Required", 
+        "Please sign in to start a workout",
+        [{ text: "Sign In", onPress: () => router.replace("/(auth)/welcome") }]
+      );
+      router.replace("/(auth)/welcome");
+      return;
+    }
+  }, [session, isPending]);
+
+  useEffect(() => {
+    // Don't start session if user is not authenticated
+    if (isPending) return;
+    
+    if (!session) {
+      setLoading(false);
+      return;
+    }
+
     const startSession = async () => {
+      // Double check authentication before making call
+      if (!session) return;
+
       try {
         const notes = id === 'quick' ? "Quick Workout" : `Workout from Program ${id}`;
         const res = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session`, {
@@ -28,12 +57,31 @@ export default function ActiveWorkoutScreen() {
 
         if (!res.ok) {
            const errText = await res.text();
+           
+           // If unauthorized, redirect to welcome (Handle gracefully WITHOUT logging error)
+           if (res.status === 401) {
+             Alert.alert(
+               "Session Expired", 
+               "Your session has expired. Please sign in again.",
+               [{ 
+                 text: "Sign In", 
+                 onPress: () => {
+                   // Ensure navigation happens
+                   router.dismissAll();
+                   router.replace("/(auth)/welcome");
+                 }
+               }]
+             );
+             return;
+           }
+
+           // Only log real errors
            console.error("Failed to create session:", errText);
            throw new Error("Failed to create session");
         }
 
         const newSession = await res.json();
-        setSession(newSession);
+        setWorkoutSession(newSession);
 
         const exRes = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/exercises`, {
              credentials: "include" 
@@ -84,9 +132,9 @@ export default function ActiveWorkoutScreen() {
   };
 
   const handleLogSet = async (exerciseId: string, reps: string, weight: string) => {
-    if (!session) return;
+    if (!workoutSession) return;
     try {
-      await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session/${session.id}/set`, {
+      await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session/${workoutSession.id}/set`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
@@ -100,13 +148,13 @@ export default function ActiveWorkoutScreen() {
   };
 
   const handleFinish = async () => {
-    if (!session) return;
+    if (!workoutSession) return;
     try {
-      await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session/${session.id}/finish`, {
+      await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session/${workoutSession.id}/finish`, {
         method: "PUT",
         credentials: "include",
         });
-      router.replace(`/workout/summary?sessionId=${session.id}`);
+      router.replace(`/workout/summary?sessionId=${workoutSession.id}`);
     } catch (error) {
       Alert.alert("Error", "Failed to finish workout");
     }

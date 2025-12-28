@@ -30,8 +30,8 @@ function AuthCheck() {
     const inOnboardingGroup = segments[0] === "(onboarding)";
 
     if (!session && !inAuthGroup) {
-      // Redirect to sign-in if not authenticated
-      router.replace("/(auth)/sign-in");
+      // Redirect to welcome screen if not authenticated
+      router.replace("/(auth)/welcome");
     } else if (session && inAuthGroup) {
       // Redirect to tabs if authenticated and in auth group
       router.replace("/(tabs)");
