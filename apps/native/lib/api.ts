@@ -16,37 +16,21 @@ const TOKEN_KEYS = [
     'session'
 ];
 
+import { authClient } from "./auth-client";
+
 export async function getSessionToken(): Promise<string | null> {
     try {
-        console.log(`[API] Searching SecureStore (Scheme: ${SCHEME})`);
+        const { data: session } = await authClient.getSession();
         
-        // Better Auth Expo client stores token in various keys depending on version/prefix
-        const possibleKeys = [
-            `${SCHEME}.better-auth.session_token`,
-            `${SCHEME}.better-auth.session`,
-            `${SCHEME}.session_token`,
-            `${SCHEME}.session`,
-            'better-auth.session_token',
-            'better-auth.session',
-            'session_token',
-            'session',
-            // Some versions use underscores
-            `${SCHEME}_better_auth_session_token`,
-            `${SCHEME}_session_token`,
-        ];
-
-        for (const key of possibleKeys) {
-            const token = await SecureStore.getItemAsync(key);
-            if (token) {
-                console.log(`[API] Discoverd token in: ${key}`);
-                return token;
-            }
+        if (session?.session?.token) {
+            console.log(`[API] Token retrieved from authClient session object.`);
+            return session.session.token;
         }
-        
-        console.warn(`[API] Could not find session token in any known SecureStore keys.`);
+
+        console.warn(`[API] No token found in active session.`);
         return null;
     } catch (error) {
-        console.error('[API] Error reading SecureStore:', error);
+        console.error('[API] Error getting session from authClient:', error);
         return null;
     }
 }
