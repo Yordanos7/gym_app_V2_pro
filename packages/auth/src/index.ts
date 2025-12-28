@@ -7,14 +7,19 @@ export const auth = betterAuth<BetterAuthOptions>({
 	database: prismaAdapter(prisma, {
 		provider: "postgresql",
 	}),
-	trustedOrigins: [...(process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",") : []), "mybettertapp://", "exp://"],
+	trustedOrigins: [
+		...(process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",") : []), 
+		"mybettertapp://", 
+		"exp://", 
+		"gymApp://"
+	],
 	emailAndPassword: {
 		enabled: true,
 	},
 	advanced: {
 		defaultCookieAttributes: {
 			sameSite: "none",
-			secure: true,
+			secure: false, // Changed to false to support local development over HTTP
 			httpOnly: true,
 		},
 	},

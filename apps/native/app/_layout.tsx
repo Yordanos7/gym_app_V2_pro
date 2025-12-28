@@ -21,6 +21,13 @@ function AuthCheck() {
   const segments = useSegments(); // this is use for show where the user is in screen 
   const router = useRouter();
    
+  console.log(`[AuthCheck] Session: ${!!session}, Pending: ${isPending}`);
+  if (session) {
+    // @ts-ignore
+    console.log(`[AuthCheck] Session Keys: ${Object.keys(session)}`);
+    // @ts-ignore
+    if (session.session) console.log(`[AuthCheck] session.session Keys: ${Object.keys(session.session)}`);
+  }
 
    // this useeffect use for make  the auth applied when user is open the app 
   useEffect(() => {

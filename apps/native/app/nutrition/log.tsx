@@ -2,6 +2,7 @@ import { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, ScrollView } from "react-native";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
+import { authFetch } from "@/lib/api";
 
 const MEAL_TYPES = ["BREAKFAST", "LUNCH", "DINNER", "SNACK"];
 
@@ -20,9 +21,8 @@ export default function LogMealScreen() {
 
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/nutrition`, {
+      const response = await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/nutrition`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type, calories, protein: protein || 0 }),
       });
 

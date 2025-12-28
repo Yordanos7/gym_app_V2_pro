@@ -6,6 +6,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { BlurView } from "expo-blur";
 import Animated, { FadeInDown, FadeInUp, LayoutAnimationConfig } from "react-native-reanimated";
 import { useSession } from "@/lib/use-session";
+import { authFetch } from "@/lib/api";
 
 export default function ActiveWorkoutScreen() {
   const { id } = useLocalSearchParams();
@@ -48,10 +49,8 @@ export default function ActiveWorkoutScreen() {
 
       try {
         const notes = id === 'quick' ? "Quick Workout" : `Workout from Program ${id}`;
-        const res = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session`, {
+        const res = await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session`, {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          credentials: "include",
           body: JSON.stringify({ notes }),
         });
 
@@ -83,9 +82,7 @@ export default function ActiveWorkoutScreen() {
         const newSession = await res.json();
         setWorkoutSession(newSession);
 
-        const exRes = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/exercises`, {
-             credentials: "include" 
-        });
+        const exRes = await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/exercises`);
         const exercisesData = await exRes.json();
         setAllExercises(exercisesData);
         
@@ -134,10 +131,8 @@ export default function ActiveWorkoutScreen() {
   const handleLogSet = async (exerciseId: string, reps: string, weight: string) => {
     if (!workoutSession) return;
     try {
-      await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session/${workoutSession.id}/set`, {
+      await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session/${workoutSession.id}/set`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({ exerciseId, reps, weight }),
       });
       // Trigger Timer
@@ -150,9 +145,8 @@ export default function ActiveWorkoutScreen() {
   const handleFinish = async () => {
     if (!workoutSession) return;
     try {
-      await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session/${workoutSession.id}/finish`, {
+      await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session/${workoutSession.id}/finish`, {
         method: "PUT",
-        credentials: "include",
         });
       router.replace(`/workout/summary?sessionId=${workoutSession.id}`);
     } catch (error) {

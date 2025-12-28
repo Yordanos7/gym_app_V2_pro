@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator } from "react-native";
+import { authFetch } from "@/lib/api";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
@@ -21,7 +22,7 @@ export default function ExerciseDetailScreen() {
     // Quick fix: fetch list and filter client side for this demo
     const fetchExercise = async () => {
       try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/exercises`);
+        const response = await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/exercises`);
         if (response.ok) {
           const json = await response.json();
           const found = json.find((e: any) => e.id === id);

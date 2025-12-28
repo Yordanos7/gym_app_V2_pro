@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { View, Text, FlatList, TextInput, TouchableOpacity, ActivityIndicator, StatusBar } from "react-native";
+import { authFetch } from "@/lib/api";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter, Stack } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
@@ -24,7 +25,7 @@ export default function ExercisesScreen() {
     setLoading(true);
     try {
       const query = searchTerm ? `?search=${searchTerm}` : "";
-      const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/exercises${query}`);
+      const response = await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/exercises${query}`);
       if (response.ok) {
         const json = await response.json();
         setExercises(json);

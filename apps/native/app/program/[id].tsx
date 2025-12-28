@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, StatusBar } from "react-native";
+import { authFetch } from "@/lib/api";
 import { useLocalSearchParams, useRouter, Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
@@ -14,7 +15,7 @@ export default function ProgramDetailScreen() {
   useEffect(() => {
     const fetchProgram = async () => {
       try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/programs/${id}`);
+        const response = await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/programs/${id}`);
         if (response.ok) {
           const json = await response.json();
           setProgram(json);

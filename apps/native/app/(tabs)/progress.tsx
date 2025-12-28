@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text, ScrollView, ActivityIndicator, StatusBar } from "react-native";
+import { authFetch } from "@/lib/api";
 import { Ionicons } from "@expo/vector-icons";
 import { Stack } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
@@ -12,7 +13,7 @@ export default function ProgressScreen() {
   useEffect(() => {
     const fetchProgress = async () => {
       try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/progress`);
+        const response = await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/progress`);
         if (response.ok) {
           const json = await response.json();
           setData(json);

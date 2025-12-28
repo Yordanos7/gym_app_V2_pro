@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, StatusBar } from "react-native";
+import { authFetch } from "@/lib/api";
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
@@ -21,7 +22,7 @@ export default function WorkoutsScreen() {
   useEffect(() => {
     const fetchPrograms = async () => {
       try {
-        const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/programs`);
+        const response = await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/programs`);
         if (response.ok) {
           const json = await response.json();
           setPrograms(json);

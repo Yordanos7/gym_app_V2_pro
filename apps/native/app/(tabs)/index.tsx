@@ -4,6 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import Animated, { FadeIn, FadeInUp } from "react-native-reanimated";
 import { useSession } from "@/lib/use-session";
+import { authFetch } from "@/lib/api";
 
 import MotivationalHero from "@/components/MotivationalHero";
 import { AnimatedStatsGrid } from "@/components/AnimatedStats";
@@ -33,9 +34,7 @@ export default function HomeScreen() {
 
   const fetchDashboard = async () => {
     try {
-      const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/dashboard`, {
-        credentials: "include"
-      });
+      const response = await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/dashboard`);
       if (response.ok) {
         const json = await response.json();
         setData(json);
@@ -81,13 +80,13 @@ export default function HomeScreen() {
       <StatusBar barStyle="light-content" />
       <ScrollView 
         className="flex-1"
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={{ paddingBottom: 100}}
         refreshControl={
             <RefreshControl 
                 refreshing={refreshing} 
                 onRefresh={onRefresh} 
                 tintColor="#C6FF00" 
-                progressViewOffset={50}
+                progressViewOffset={50} // need to get more on this code line what is it and how is used
             />
         }
       >

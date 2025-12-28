@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Alert, Platform } from "react-
 import { useRouter, Stack } from "expo-router";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from "@expo/vector-icons";
+import { authFetch } from "@/lib/api";
 
 export default function ScheduleWorkoutScreen() {
   const router = useRouter();
@@ -14,10 +15,8 @@ export default function ScheduleWorkoutScreen() {
   const handleSchedule = async () => {
     setLoading(true);
     try {
-      const response = await fetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session`, {
+      const response = await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/workout-session`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
         body: JSON.stringify({ 
             notes: notes || "Scheduled Workout",
             date: date.toISOString() 
