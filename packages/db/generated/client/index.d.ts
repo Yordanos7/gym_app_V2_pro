@@ -176,6 +176,23 @@ export const ActivityLevel: {
 export type ActivityLevel = (typeof ActivityLevel)[keyof typeof ActivityLevel]
 
 
+export const MechanicsType: {
+  COMPOUND: 'COMPOUND',
+  ISOLATION: 'ISOLATION'
+};
+
+export type MechanicsType = (typeof MechanicsType)[keyof typeof MechanicsType]
+
+
+export const ForceType: {
+  PUSH: 'PUSH',
+  PULL: 'PULL',
+  STATIC: 'STATIC'
+};
+
+export type ForceType = (typeof ForceType)[keyof typeof ForceType]
+
+
 export const WorkoutStatus: {
   STARTED: 'STARTED',
   COMPLETED: 'COMPLETED',
@@ -253,6 +270,14 @@ export const Level: typeof $Enums.Level
 export type ActivityLevel = $Enums.ActivityLevel
 
 export const ActivityLevel: typeof $Enums.ActivityLevel
+
+export type MechanicsType = $Enums.MechanicsType
+
+export const MechanicsType: typeof $Enums.MechanicsType
+
+export type ForceType = $Enums.ForceType
+
+export const ForceType: typeof $Enums.ForceType
 
 export type WorkoutStatus = $Enums.WorkoutStatus
 
@@ -12944,6 +12969,11 @@ export namespace Prisma {
     equipment: string | null
     primaryMuscleId: string | null
     secondaryMuscleId: string | null
+    difficulty: $Enums.Level | null
+    mechanics: $Enums.MechanicsType | null
+    force: $Enums.ForceType | null
+    tips: string | null
+    mistakes: string | null
   }
 
   export type ExerciseMaxAggregateOutputType = {
@@ -12954,6 +12984,11 @@ export namespace Prisma {
     equipment: string | null
     primaryMuscleId: string | null
     secondaryMuscleId: string | null
+    difficulty: $Enums.Level | null
+    mechanics: $Enums.MechanicsType | null
+    force: $Enums.ForceType | null
+    tips: string | null
+    mistakes: string | null
   }
 
   export type ExerciseCountAggregateOutputType = {
@@ -12964,6 +12999,11 @@ export namespace Prisma {
     equipment: number
     primaryMuscleId: number
     secondaryMuscleId: number
+    difficulty: number
+    mechanics: number
+    force: number
+    tips: number
+    mistakes: number
     _all: number
   }
 
@@ -12976,6 +13016,11 @@ export namespace Prisma {
     equipment?: true
     primaryMuscleId?: true
     secondaryMuscleId?: true
+    difficulty?: true
+    mechanics?: true
+    force?: true
+    tips?: true
+    mistakes?: true
   }
 
   export type ExerciseMaxAggregateInputType = {
@@ -12986,6 +13031,11 @@ export namespace Prisma {
     equipment?: true
     primaryMuscleId?: true
     secondaryMuscleId?: true
+    difficulty?: true
+    mechanics?: true
+    force?: true
+    tips?: true
+    mistakes?: true
   }
 
   export type ExerciseCountAggregateInputType = {
@@ -12996,6 +13046,11 @@ export namespace Prisma {
     equipment?: true
     primaryMuscleId?: true
     secondaryMuscleId?: true
+    difficulty?: true
+    mechanics?: true
+    force?: true
+    tips?: true
+    mistakes?: true
     _all?: true
   }
 
@@ -13079,6 +13134,11 @@ export namespace Prisma {
     equipment: string | null
     primaryMuscleId: string
     secondaryMuscleId: string | null
+    difficulty: $Enums.Level
+    mechanics: $Enums.MechanicsType
+    force: $Enums.ForceType
+    tips: string | null
+    mistakes: string | null
     _count: ExerciseCountAggregateOutputType | null
     _min: ExerciseMinAggregateOutputType | null
     _max: ExerciseMaxAggregateOutputType | null
@@ -13106,6 +13166,11 @@ export namespace Prisma {
     equipment?: boolean
     primaryMuscleId?: boolean
     secondaryMuscleId?: boolean
+    difficulty?: boolean
+    mechanics?: boolean
+    force?: boolean
+    tips?: boolean
+    mistakes?: boolean
     primaryMuscle?: boolean | MuscleDefaultArgs<ExtArgs>
     secondaryMuscle?: boolean | Exercise$secondaryMuscleArgs<ExtArgs>
     programItems?: boolean | Exercise$programItemsArgs<ExtArgs>
@@ -13122,6 +13187,11 @@ export namespace Prisma {
     equipment?: boolean
     primaryMuscleId?: boolean
     secondaryMuscleId?: boolean
+    difficulty?: boolean
+    mechanics?: boolean
+    force?: boolean
+    tips?: boolean
+    mistakes?: boolean
     primaryMuscle?: boolean | MuscleDefaultArgs<ExtArgs>
     secondaryMuscle?: boolean | Exercise$secondaryMuscleArgs<ExtArgs>
   }, ExtArgs["result"]["exercise"]>
@@ -13134,6 +13204,11 @@ export namespace Prisma {
     equipment?: boolean
     primaryMuscleId?: boolean
     secondaryMuscleId?: boolean
+    difficulty?: boolean
+    mechanics?: boolean
+    force?: boolean
+    tips?: boolean
+    mistakes?: boolean
     primaryMuscle?: boolean | MuscleDefaultArgs<ExtArgs>
     secondaryMuscle?: boolean | Exercise$secondaryMuscleArgs<ExtArgs>
   }, ExtArgs["result"]["exercise"]>
@@ -13146,9 +13221,14 @@ export namespace Prisma {
     equipment?: boolean
     primaryMuscleId?: boolean
     secondaryMuscleId?: boolean
+    difficulty?: boolean
+    mechanics?: boolean
+    force?: boolean
+    tips?: boolean
+    mistakes?: boolean
   }
 
-  export type ExerciseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "videoUrl" | "equipment" | "primaryMuscleId" | "secondaryMuscleId", ExtArgs["result"]["exercise"]>
+  export type ExerciseOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "description" | "videoUrl" | "equipment" | "primaryMuscleId" | "secondaryMuscleId" | "difficulty" | "mechanics" | "force" | "tips" | "mistakes", ExtArgs["result"]["exercise"]>
   export type ExerciseInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     primaryMuscle?: boolean | MuscleDefaultArgs<ExtArgs>
     secondaryMuscle?: boolean | Exercise$secondaryMuscleArgs<ExtArgs>
@@ -13183,6 +13263,11 @@ export namespace Prisma {
       equipment: string | null
       primaryMuscleId: string
       secondaryMuscleId: string | null
+      difficulty: $Enums.Level
+      mechanics: $Enums.MechanicsType
+      force: $Enums.ForceType
+      tips: string | null
+      mistakes: string | null
     }, ExtArgs["result"]["exercise"]>
     composites: {}
   }
@@ -13618,6 +13703,11 @@ export namespace Prisma {
     readonly equipment: FieldRef<"Exercise", 'String'>
     readonly primaryMuscleId: FieldRef<"Exercise", 'String'>
     readonly secondaryMuscleId: FieldRef<"Exercise", 'String'>
+    readonly difficulty: FieldRef<"Exercise", 'Level'>
+    readonly mechanics: FieldRef<"Exercise", 'MechanicsType'>
+    readonly force: FieldRef<"Exercise", 'ForceType'>
+    readonly tips: FieldRef<"Exercise", 'String'>
+    readonly mistakes: FieldRef<"Exercise", 'String'>
   }
     
 
@@ -32604,7 +32694,12 @@ export namespace Prisma {
     videoUrl: 'videoUrl',
     equipment: 'equipment',
     primaryMuscleId: 'primaryMuscleId',
-    secondaryMuscleId: 'secondaryMuscleId'
+    secondaryMuscleId: 'secondaryMuscleId',
+    difficulty: 'difficulty',
+    mechanics: 'mechanics',
+    force: 'force',
+    tips: 'tips',
+    mistakes: 'mistakes'
   };
 
   export type ExerciseScalarFieldEnum = (typeof ExerciseScalarFieldEnum)[keyof typeof ExerciseScalarFieldEnum]
@@ -32942,6 +33037,34 @@ export namespace Prisma {
    * Reference to a field of type 'ActivityLevel[]'
    */
   export type ListEnumActivityLevelFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ActivityLevel[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'MechanicsType'
+   */
+  export type EnumMechanicsTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MechanicsType'>
+    
+
+
+  /**
+   * Reference to a field of type 'MechanicsType[]'
+   */
+  export type ListEnumMechanicsTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'MechanicsType[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'ForceType'
+   */
+  export type EnumForceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ForceType'>
+    
+
+
+  /**
+   * Reference to a field of type 'ForceType[]'
+   */
+  export type ListEnumForceTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ForceType[]'>
     
 
 
@@ -33585,6 +33708,11 @@ export namespace Prisma {
     equipment?: StringNullableFilter<"Exercise"> | string | null
     primaryMuscleId?: StringFilter<"Exercise"> | string
     secondaryMuscleId?: StringNullableFilter<"Exercise"> | string | null
+    difficulty?: EnumLevelFilter<"Exercise"> | $Enums.Level
+    mechanics?: EnumMechanicsTypeFilter<"Exercise"> | $Enums.MechanicsType
+    force?: EnumForceTypeFilter<"Exercise"> | $Enums.ForceType
+    tips?: StringNullableFilter<"Exercise"> | string | null
+    mistakes?: StringNullableFilter<"Exercise"> | string | null
     primaryMuscle?: XOR<MuscleScalarRelationFilter, MuscleWhereInput>
     secondaryMuscle?: XOR<MuscleNullableScalarRelationFilter, MuscleWhereInput> | null
     programItems?: ProgramExerciseListRelationFilter
@@ -33600,6 +33728,11 @@ export namespace Prisma {
     equipment?: SortOrderInput | SortOrder
     primaryMuscleId?: SortOrder
     secondaryMuscleId?: SortOrderInput | SortOrder
+    difficulty?: SortOrder
+    mechanics?: SortOrder
+    force?: SortOrder
+    tips?: SortOrderInput | SortOrder
+    mistakes?: SortOrderInput | SortOrder
     primaryMuscle?: MuscleOrderByWithRelationInput
     secondaryMuscle?: MuscleOrderByWithRelationInput
     programItems?: ProgramExerciseOrderByRelationAggregateInput
@@ -33618,6 +33751,11 @@ export namespace Prisma {
     equipment?: StringNullableFilter<"Exercise"> | string | null
     primaryMuscleId?: StringFilter<"Exercise"> | string
     secondaryMuscleId?: StringNullableFilter<"Exercise"> | string | null
+    difficulty?: EnumLevelFilter<"Exercise"> | $Enums.Level
+    mechanics?: EnumMechanicsTypeFilter<"Exercise"> | $Enums.MechanicsType
+    force?: EnumForceTypeFilter<"Exercise"> | $Enums.ForceType
+    tips?: StringNullableFilter<"Exercise"> | string | null
+    mistakes?: StringNullableFilter<"Exercise"> | string | null
     primaryMuscle?: XOR<MuscleScalarRelationFilter, MuscleWhereInput>
     secondaryMuscle?: XOR<MuscleNullableScalarRelationFilter, MuscleWhereInput> | null
     programItems?: ProgramExerciseListRelationFilter
@@ -33633,6 +33771,11 @@ export namespace Prisma {
     equipment?: SortOrderInput | SortOrder
     primaryMuscleId?: SortOrder
     secondaryMuscleId?: SortOrderInput | SortOrder
+    difficulty?: SortOrder
+    mechanics?: SortOrder
+    force?: SortOrder
+    tips?: SortOrderInput | SortOrder
+    mistakes?: SortOrderInput | SortOrder
     _count?: ExerciseCountOrderByAggregateInput
     _max?: ExerciseMaxOrderByAggregateInput
     _min?: ExerciseMinOrderByAggregateInput
@@ -33649,6 +33792,11 @@ export namespace Prisma {
     equipment?: StringNullableWithAggregatesFilter<"Exercise"> | string | null
     primaryMuscleId?: StringWithAggregatesFilter<"Exercise"> | string
     secondaryMuscleId?: StringNullableWithAggregatesFilter<"Exercise"> | string | null
+    difficulty?: EnumLevelWithAggregatesFilter<"Exercise"> | $Enums.Level
+    mechanics?: EnumMechanicsTypeWithAggregatesFilter<"Exercise"> | $Enums.MechanicsType
+    force?: EnumForceTypeWithAggregatesFilter<"Exercise"> | $Enums.ForceType
+    tips?: StringNullableWithAggregatesFilter<"Exercise"> | string | null
+    mistakes?: StringNullableWithAggregatesFilter<"Exercise"> | string | null
   }
 
   export type WorkoutSessionWhereInput = {
@@ -35238,6 +35386,11 @@ export namespace Prisma {
     description?: string | null
     videoUrl?: string | null
     equipment?: string | null
+    difficulty?: $Enums.Level
+    mechanics?: $Enums.MechanicsType
+    force?: $Enums.ForceType
+    tips?: string | null
+    mistakes?: string | null
     primaryMuscle: MuscleCreateNestedOneWithoutPrimaryExercisesInput
     secondaryMuscle?: MuscleCreateNestedOneWithoutSecondaryExercisesInput
     programItems?: ProgramExerciseCreateNestedManyWithoutExerciseInput
@@ -35253,6 +35406,11 @@ export namespace Prisma {
     equipment?: string | null
     primaryMuscleId: string
     secondaryMuscleId?: string | null
+    difficulty?: $Enums.Level
+    mechanics?: $Enums.MechanicsType
+    force?: $Enums.ForceType
+    tips?: string | null
+    mistakes?: string | null
     programItems?: ProgramExerciseUncheckedCreateNestedManyWithoutExerciseInput
     workoutItems?: WorkoutExerciseUncheckedCreateNestedManyWithoutExerciseInput
     favorites?: FavoriteExerciseUncheckedCreateNestedManyWithoutExerciseInput
@@ -35264,6 +35422,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
     primaryMuscle?: MuscleUpdateOneRequiredWithoutPrimaryExercisesNestedInput
     secondaryMuscle?: MuscleUpdateOneWithoutSecondaryExercisesNestedInput
     programItems?: ProgramExerciseUpdateManyWithoutExerciseNestedInput
@@ -35279,6 +35442,11 @@ export namespace Prisma {
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
     primaryMuscleId?: StringFieldUpdateOperationsInput | string
     secondaryMuscleId?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
     programItems?: ProgramExerciseUncheckedUpdateManyWithoutExerciseNestedInput
     workoutItems?: WorkoutExerciseUncheckedUpdateManyWithoutExerciseNestedInput
     favorites?: FavoriteExerciseUncheckedUpdateManyWithoutExerciseNestedInput
@@ -35292,6 +35460,11 @@ export namespace Prisma {
     equipment?: string | null
     primaryMuscleId: string
     secondaryMuscleId?: string | null
+    difficulty?: $Enums.Level
+    mechanics?: $Enums.MechanicsType
+    force?: $Enums.ForceType
+    tips?: string | null
+    mistakes?: string | null
   }
 
   export type ExerciseUpdateManyMutationInput = {
@@ -35300,6 +35473,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ExerciseUncheckedUpdateManyInput = {
@@ -35310,6 +35488,11 @@ export namespace Prisma {
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
     primaryMuscleId?: StringFieldUpdateOperationsInput | string
     secondaryMuscleId?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type WorkoutSessionCreateInput = {
@@ -37047,6 +37230,20 @@ export namespace Prisma {
     name?: SortOrder
   }
 
+  export type EnumMechanicsTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MechanicsType | EnumMechanicsTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MechanicsType[] | ListEnumMechanicsTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MechanicsType[] | ListEnumMechanicsTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMechanicsTypeFilter<$PrismaModel> | $Enums.MechanicsType
+  }
+
+  export type EnumForceTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ForceType | EnumForceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ForceType[] | ListEnumForceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ForceType[] | ListEnumForceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumForceTypeFilter<$PrismaModel> | $Enums.ForceType
+  }
+
   export type MuscleScalarRelationFilter = {
     is?: MuscleWhereInput
     isNot?: MuscleWhereInput
@@ -37075,6 +37272,11 @@ export namespace Prisma {
     equipment?: SortOrder
     primaryMuscleId?: SortOrder
     secondaryMuscleId?: SortOrder
+    difficulty?: SortOrder
+    mechanics?: SortOrder
+    force?: SortOrder
+    tips?: SortOrder
+    mistakes?: SortOrder
   }
 
   export type ExerciseMaxOrderByAggregateInput = {
@@ -37085,6 +37287,11 @@ export namespace Prisma {
     equipment?: SortOrder
     primaryMuscleId?: SortOrder
     secondaryMuscleId?: SortOrder
+    difficulty?: SortOrder
+    mechanics?: SortOrder
+    force?: SortOrder
+    tips?: SortOrder
+    mistakes?: SortOrder
   }
 
   export type ExerciseMinOrderByAggregateInput = {
@@ -37095,6 +37302,31 @@ export namespace Prisma {
     equipment?: SortOrder
     primaryMuscleId?: SortOrder
     secondaryMuscleId?: SortOrder
+    difficulty?: SortOrder
+    mechanics?: SortOrder
+    force?: SortOrder
+    tips?: SortOrder
+    mistakes?: SortOrder
+  }
+
+  export type EnumMechanicsTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MechanicsType | EnumMechanicsTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MechanicsType[] | ListEnumMechanicsTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MechanicsType[] | ListEnumMechanicsTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMechanicsTypeWithAggregatesFilter<$PrismaModel> | $Enums.MechanicsType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMechanicsTypeFilter<$PrismaModel>
+    _max?: NestedEnumMechanicsTypeFilter<$PrismaModel>
+  }
+
+  export type EnumForceTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ForceType | EnumForceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ForceType[] | ListEnumForceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ForceType[] | ListEnumForceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumForceTypeWithAggregatesFilter<$PrismaModel> | $Enums.ForceType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumForceTypeFilter<$PrismaModel>
+    _max?: NestedEnumForceTypeFilter<$PrismaModel>
   }
 
   export type EnumWorkoutStatusFilter<$PrismaModel = never> = {
@@ -38955,6 +39187,14 @@ export namespace Prisma {
     connect?: FavoriteExerciseWhereUniqueInput | FavoriteExerciseWhereUniqueInput[]
   }
 
+  export type EnumMechanicsTypeFieldUpdateOperationsInput = {
+    set?: $Enums.MechanicsType
+  }
+
+  export type EnumForceTypeFieldUpdateOperationsInput = {
+    set?: $Enums.ForceType
+  }
+
   export type MuscleUpdateOneRequiredWithoutPrimaryExercisesNestedInput = {
     create?: XOR<MuscleCreateWithoutPrimaryExercisesInput, MuscleUncheckedCreateWithoutPrimaryExercisesInput>
     connectOrCreate?: MuscleCreateOrConnectWithoutPrimaryExercisesInput
@@ -39730,6 +39970,40 @@ export namespace Prisma {
     gt?: number | FloatFieldRefInput<$PrismaModel>
     gte?: number | FloatFieldRefInput<$PrismaModel>
     not?: NestedFloatFilter<$PrismaModel> | number
+  }
+
+  export type NestedEnumMechanicsTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MechanicsType | EnumMechanicsTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MechanicsType[] | ListEnumMechanicsTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MechanicsType[] | ListEnumMechanicsTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMechanicsTypeFilter<$PrismaModel> | $Enums.MechanicsType
+  }
+
+  export type NestedEnumForceTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.ForceType | EnumForceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ForceType[] | ListEnumForceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ForceType[] | ListEnumForceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumForceTypeFilter<$PrismaModel> | $Enums.ForceType
+  }
+
+  export type NestedEnumMechanicsTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MechanicsType | EnumMechanicsTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MechanicsType[] | ListEnumMechanicsTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MechanicsType[] | ListEnumMechanicsTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMechanicsTypeWithAggregatesFilter<$PrismaModel> | $Enums.MechanicsType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMechanicsTypeFilter<$PrismaModel>
+    _max?: NestedEnumMechanicsTypeFilter<$PrismaModel>
+  }
+
+  export type NestedEnumForceTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.ForceType | EnumForceTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.ForceType[] | ListEnumForceTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.ForceType[] | ListEnumForceTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumForceTypeWithAggregatesFilter<$PrismaModel> | $Enums.ForceType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumForceTypeFilter<$PrismaModel>
+    _max?: NestedEnumForceTypeFilter<$PrismaModel>
   }
 
   export type NestedEnumWorkoutStatusFilter<$PrismaModel = never> = {
@@ -41738,6 +42012,11 @@ export namespace Prisma {
     description?: string | null
     videoUrl?: string | null
     equipment?: string | null
+    difficulty?: $Enums.Level
+    mechanics?: $Enums.MechanicsType
+    force?: $Enums.ForceType
+    tips?: string | null
+    mistakes?: string | null
     primaryMuscle: MuscleCreateNestedOneWithoutPrimaryExercisesInput
     secondaryMuscle?: MuscleCreateNestedOneWithoutSecondaryExercisesInput
     workoutItems?: WorkoutExerciseCreateNestedManyWithoutExerciseInput
@@ -41752,6 +42031,11 @@ export namespace Prisma {
     equipment?: string | null
     primaryMuscleId: string
     secondaryMuscleId?: string | null
+    difficulty?: $Enums.Level
+    mechanics?: $Enums.MechanicsType
+    force?: $Enums.ForceType
+    tips?: string | null
+    mistakes?: string | null
     workoutItems?: WorkoutExerciseUncheckedCreateNestedManyWithoutExerciseInput
     favorites?: FavoriteExerciseUncheckedCreateNestedManyWithoutExerciseInput
   }
@@ -41803,6 +42087,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
     primaryMuscle?: MuscleUpdateOneRequiredWithoutPrimaryExercisesNestedInput
     secondaryMuscle?: MuscleUpdateOneWithoutSecondaryExercisesNestedInput
     workoutItems?: WorkoutExerciseUpdateManyWithoutExerciseNestedInput
@@ -41817,6 +42106,11 @@ export namespace Prisma {
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
     primaryMuscleId?: StringFieldUpdateOperationsInput | string
     secondaryMuscleId?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
     workoutItems?: WorkoutExerciseUncheckedUpdateManyWithoutExerciseNestedInput
     favorites?: FavoriteExerciseUncheckedUpdateManyWithoutExerciseNestedInput
   }
@@ -41827,6 +42121,11 @@ export namespace Prisma {
     description?: string | null
     videoUrl?: string | null
     equipment?: string | null
+    difficulty?: $Enums.Level
+    mechanics?: $Enums.MechanicsType
+    force?: $Enums.ForceType
+    tips?: string | null
+    mistakes?: string | null
     secondaryMuscle?: MuscleCreateNestedOneWithoutSecondaryExercisesInput
     programItems?: ProgramExerciseCreateNestedManyWithoutExerciseInput
     workoutItems?: WorkoutExerciseCreateNestedManyWithoutExerciseInput
@@ -41840,6 +42139,11 @@ export namespace Prisma {
     videoUrl?: string | null
     equipment?: string | null
     secondaryMuscleId?: string | null
+    difficulty?: $Enums.Level
+    mechanics?: $Enums.MechanicsType
+    force?: $Enums.ForceType
+    tips?: string | null
+    mistakes?: string | null
     programItems?: ProgramExerciseUncheckedCreateNestedManyWithoutExerciseInput
     workoutItems?: WorkoutExerciseUncheckedCreateNestedManyWithoutExerciseInput
     favorites?: FavoriteExerciseUncheckedCreateNestedManyWithoutExerciseInput
@@ -41861,6 +42165,11 @@ export namespace Prisma {
     description?: string | null
     videoUrl?: string | null
     equipment?: string | null
+    difficulty?: $Enums.Level
+    mechanics?: $Enums.MechanicsType
+    force?: $Enums.ForceType
+    tips?: string | null
+    mistakes?: string | null
     primaryMuscle: MuscleCreateNestedOneWithoutPrimaryExercisesInput
     programItems?: ProgramExerciseCreateNestedManyWithoutExerciseInput
     workoutItems?: WorkoutExerciseCreateNestedManyWithoutExerciseInput
@@ -41874,6 +42183,11 @@ export namespace Prisma {
     videoUrl?: string | null
     equipment?: string | null
     primaryMuscleId: string
+    difficulty?: $Enums.Level
+    mechanics?: $Enums.MechanicsType
+    force?: $Enums.ForceType
+    tips?: string | null
+    mistakes?: string | null
     programItems?: ProgramExerciseUncheckedCreateNestedManyWithoutExerciseInput
     workoutItems?: WorkoutExerciseUncheckedCreateNestedManyWithoutExerciseInput
     favorites?: FavoriteExerciseUncheckedCreateNestedManyWithoutExerciseInput
@@ -41916,6 +42230,11 @@ export namespace Prisma {
     equipment?: StringNullableFilter<"Exercise"> | string | null
     primaryMuscleId?: StringFilter<"Exercise"> | string
     secondaryMuscleId?: StringNullableFilter<"Exercise"> | string | null
+    difficulty?: EnumLevelFilter<"Exercise"> | $Enums.Level
+    mechanics?: EnumMechanicsTypeFilter<"Exercise"> | $Enums.MechanicsType
+    force?: EnumForceTypeFilter<"Exercise"> | $Enums.ForceType
+    tips?: StringNullableFilter<"Exercise"> | string | null
+    mistakes?: StringNullableFilter<"Exercise"> | string | null
   }
 
   export type ExerciseUpsertWithWhereUniqueWithoutSecondaryMuscleInput = {
@@ -42338,6 +42657,11 @@ export namespace Prisma {
     description?: string | null
     videoUrl?: string | null
     equipment?: string | null
+    difficulty?: $Enums.Level
+    mechanics?: $Enums.MechanicsType
+    force?: $Enums.ForceType
+    tips?: string | null
+    mistakes?: string | null
     primaryMuscle: MuscleCreateNestedOneWithoutPrimaryExercisesInput
     secondaryMuscle?: MuscleCreateNestedOneWithoutSecondaryExercisesInput
     programItems?: ProgramExerciseCreateNestedManyWithoutExerciseInput
@@ -42352,6 +42676,11 @@ export namespace Prisma {
     equipment?: string | null
     primaryMuscleId: string
     secondaryMuscleId?: string | null
+    difficulty?: $Enums.Level
+    mechanics?: $Enums.MechanicsType
+    force?: $Enums.ForceType
+    tips?: string | null
+    mistakes?: string | null
     programItems?: ProgramExerciseUncheckedCreateNestedManyWithoutExerciseInput
     favorites?: FavoriteExerciseUncheckedCreateNestedManyWithoutExerciseInput
   }
@@ -42431,6 +42760,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
     primaryMuscle?: MuscleUpdateOneRequiredWithoutPrimaryExercisesNestedInput
     secondaryMuscle?: MuscleUpdateOneWithoutSecondaryExercisesNestedInput
     programItems?: ProgramExerciseUpdateManyWithoutExerciseNestedInput
@@ -42445,6 +42779,11 @@ export namespace Prisma {
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
     primaryMuscleId?: StringFieldUpdateOperationsInput | string
     secondaryMuscleId?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
     programItems?: ProgramExerciseUncheckedUpdateManyWithoutExerciseNestedInput
     favorites?: FavoriteExerciseUncheckedUpdateManyWithoutExerciseNestedInput
   }
@@ -43353,6 +43692,11 @@ export namespace Prisma {
     description?: string | null
     videoUrl?: string | null
     equipment?: string | null
+    difficulty?: $Enums.Level
+    mechanics?: $Enums.MechanicsType
+    force?: $Enums.ForceType
+    tips?: string | null
+    mistakes?: string | null
     primaryMuscle: MuscleCreateNestedOneWithoutPrimaryExercisesInput
     secondaryMuscle?: MuscleCreateNestedOneWithoutSecondaryExercisesInput
     programItems?: ProgramExerciseCreateNestedManyWithoutExerciseInput
@@ -43367,6 +43711,11 @@ export namespace Prisma {
     equipment?: string | null
     primaryMuscleId: string
     secondaryMuscleId?: string | null
+    difficulty?: $Enums.Level
+    mechanics?: $Enums.MechanicsType
+    force?: $Enums.ForceType
+    tips?: string | null
+    mistakes?: string | null
     programItems?: ProgramExerciseUncheckedCreateNestedManyWithoutExerciseInput
     workoutItems?: WorkoutExerciseUncheckedCreateNestedManyWithoutExerciseInput
   }
@@ -43464,6 +43813,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
     primaryMuscle?: MuscleUpdateOneRequiredWithoutPrimaryExercisesNestedInput
     secondaryMuscle?: MuscleUpdateOneWithoutSecondaryExercisesNestedInput
     programItems?: ProgramExerciseUpdateManyWithoutExerciseNestedInput
@@ -43478,6 +43832,11 @@ export namespace Prisma {
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
     primaryMuscleId?: StringFieldUpdateOperationsInput | string
     secondaryMuscleId?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
     programItems?: ProgramExerciseUncheckedUpdateManyWithoutExerciseNestedInput
     workoutItems?: WorkoutExerciseUncheckedUpdateManyWithoutExerciseNestedInput
   }
@@ -45085,6 +45444,11 @@ export namespace Prisma {
     videoUrl?: string | null
     equipment?: string | null
     secondaryMuscleId?: string | null
+    difficulty?: $Enums.Level
+    mechanics?: $Enums.MechanicsType
+    force?: $Enums.ForceType
+    tips?: string | null
+    mistakes?: string | null
   }
 
   export type ExerciseCreateManySecondaryMuscleInput = {
@@ -45094,6 +45458,11 @@ export namespace Prisma {
     videoUrl?: string | null
     equipment?: string | null
     primaryMuscleId: string
+    difficulty?: $Enums.Level
+    mechanics?: $Enums.MechanicsType
+    force?: $Enums.ForceType
+    tips?: string | null
+    mistakes?: string | null
   }
 
   export type ExerciseUpdateWithoutPrimaryMuscleInput = {
@@ -45102,6 +45471,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
     secondaryMuscle?: MuscleUpdateOneWithoutSecondaryExercisesNestedInput
     programItems?: ProgramExerciseUpdateManyWithoutExerciseNestedInput
     workoutItems?: WorkoutExerciseUpdateManyWithoutExerciseNestedInput
@@ -45115,6 +45489,11 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
     secondaryMuscleId?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
     programItems?: ProgramExerciseUncheckedUpdateManyWithoutExerciseNestedInput
     workoutItems?: WorkoutExerciseUncheckedUpdateManyWithoutExerciseNestedInput
     favorites?: FavoriteExerciseUncheckedUpdateManyWithoutExerciseNestedInput
@@ -45127,6 +45506,11 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
     secondaryMuscleId?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ExerciseUpdateWithoutSecondaryMuscleInput = {
@@ -45135,6 +45519,11 @@ export namespace Prisma {
     description?: NullableStringFieldUpdateOperationsInput | string | null
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
     primaryMuscle?: MuscleUpdateOneRequiredWithoutPrimaryExercisesNestedInput
     programItems?: ProgramExerciseUpdateManyWithoutExerciseNestedInput
     workoutItems?: WorkoutExerciseUpdateManyWithoutExerciseNestedInput
@@ -45148,6 +45537,11 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
     primaryMuscleId?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
     programItems?: ProgramExerciseUncheckedUpdateManyWithoutExerciseNestedInput
     workoutItems?: WorkoutExerciseUncheckedUpdateManyWithoutExerciseNestedInput
     favorites?: FavoriteExerciseUncheckedUpdateManyWithoutExerciseNestedInput
@@ -45160,6 +45554,11 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     equipment?: NullableStringFieldUpdateOperationsInput | string | null
     primaryMuscleId?: StringFieldUpdateOperationsInput | string
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    mechanics?: EnumMechanicsTypeFieldUpdateOperationsInput | $Enums.MechanicsType
+    force?: EnumForceTypeFieldUpdateOperationsInput | $Enums.ForceType
+    tips?: NullableStringFieldUpdateOperationsInput | string | null
+    mistakes?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProgramExerciseCreateManyExerciseInput = {

@@ -49,6 +49,7 @@ export default function ProgramDetailScreen() {
         });
 
         if (response.ok) {
+            setProgram((prev: any) => ({ ...prev, isActive: true }));
             Alert.alert("Success", "Program started! You can now see it on your dashboard.", [
                 { text: "Go to Dashboard", onPress: () => router.replace("/(tabs)") }
             ]);
@@ -84,9 +85,8 @@ export default function ProgramDetailScreen() {
                         });
                         
                         if (response.ok) {
-                            Alert.alert("Stopped", "Program removed from your dashboard.", [
-                                { text: "OK", onPress: () => router.replace("/(tabs)") }
-                            ]);
+                            setProgram((prev: any) => ({ ...prev, isActive: false }));
+                            Alert.alert("Stopped", "Program removed from your dashboard.");
                         }
                     } catch (error) {
                         console.error(error);
@@ -115,7 +115,7 @@ export default function ProgramDetailScreen() {
     );
   }
 
-  const isActive = session?.user?.activeProgramId === id;
+  const isActive = program?.isActive || (session?.user as any)?.activeProgramId === id;
 
   return (
     <View className="flex-1 bg-black">

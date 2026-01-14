@@ -1,6 +1,8 @@
 import { Router } from "express";
 import prisma from "@gymApp/db";
 
+import { auth } from "@gymApp/auth";
+
 const router = Router();
 
 router.get("/", async (req, res) => {
@@ -21,6 +23,23 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    
+    // Auth check to see if this is the active program
+    let session = await auth.api.getSession({
+      headers: req.headers,
+    });
+    
+    if (!session && req.headers.authorization) {
+        const token = req.headers.authorization.replace('Bearer ', '');
+        const dbSession = await prisma.session.findUnique({
+            where: { token },
+            include: { user: true }
+        });
+        if (dbSession && dbSession.expiresAt > new Date()) {
+            session = { session: dbSession, user: dbSession.user } as any;
+        }
+    }
+
     const program = await prisma.program.findUnique({
       where: { id },
       include: {
@@ -40,7 +59,19 @@ router.get("/:id", async (req, res) => {
       return res.status(404).json({ error: "Program not found" });
     }
 
-    res.json(program);
+    let isActive = false;
+    if (session) {
+      const user = await prisma.user.findUnique({
+        where: { id: session.user.id },
+        select: { activeProgramId: true }
+      });
+      isActive = user?.activeProgramId === id;
+    }
+
+    res.json({
+      ...program,
+      isActive
+    });
   } catch (error) {
     console.error("Program fetch error:", error);
     res.status(500).json({ error: "Internal server error" });

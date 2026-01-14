@@ -163,6 +163,13 @@ model Exercise {
   equipment         String?
   primaryMuscleId   String
   secondaryMuscleId String?
+  
+  // Scientific Metadata
+  difficulty        Level       @default(BEGINNER)
+  mechanics         MechanicsType @default(COMPOUND)
+  force             ForceType     @default(PUSH)
+  tips              String?       @db.Text
+  mistakes          String?       @db.Text
 
   primaryMuscle   Muscle @relation("PrimaryMuscle", fields: [primaryMuscleId], references: [id])
   secondaryMuscle Muscle? @relation("SecondaryMuscle", fields: [secondaryMuscleId], references: [id])
@@ -170,6 +177,17 @@ model Exercise {
   programItems ProgramExercise[]
   workoutItems WorkoutExercise[]
   favorites    FavoriteExercise[]
+}
+
+enum MechanicsType {
+  COMPOUND
+  ISOLATION
+}
+
+enum ForceType {
+  PUSH
+  PULL
+  STATIC
 }
 
 // ======================================================

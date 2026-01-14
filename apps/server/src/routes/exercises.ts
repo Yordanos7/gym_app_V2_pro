@@ -22,6 +22,7 @@ router.get("/", async (req, res) => {
       where,
       include: {
         primaryMuscle: true,
+        secondaryMuscle: true,
       },
       take: 50,
     });
@@ -29,6 +30,28 @@ router.get("/", async (req, res) => {
     res.json(exercises);
   } catch (error) {
     console.error("Exercises fetch error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const exercise = await prisma.exercise.findUnique({
+      where: { id },
+      include: {
+        primaryMuscle: true,
+        secondaryMuscle: true,
+      },
+    });
+
+    if (!exercise) {
+      return res.status(404).json({ error: "Exercise not found" });
+    }
+
+    res.json(exercise);
+  } catch (error) {
+    console.error("Exercise fetch error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

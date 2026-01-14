@@ -194,7 +194,12 @@ exports.Prisma.ExerciseScalarFieldEnum = {
   videoUrl: 'videoUrl',
   equipment: 'equipment',
   primaryMuscleId: 'primaryMuscleId',
-  secondaryMuscleId: 'secondaryMuscleId'
+  secondaryMuscleId: 'secondaryMuscleId',
+  difficulty: 'difficulty',
+  mechanics: 'mechanics',
+  force: 'force',
+  tips: 'tips',
+  mistakes: 'mistakes'
 };
 
 exports.Prisma.WorkoutSessionScalarFieldEnum = {
@@ -378,6 +383,17 @@ exports.ActivityLevel = exports.$Enums.ActivityLevel = {
   LOW: 'LOW',
   MEDIUM: 'MEDIUM',
   HIGH: 'HIGH'
+};
+
+exports.MechanicsType = exports.$Enums.MechanicsType = {
+  COMPOUND: 'COMPOUND',
+  ISOLATION: 'ISOLATION'
+};
+
+exports.ForceType = exports.$Enums.ForceType = {
+  PUSH: 'PUSH',
+  PULL: 'PULL',
+  STATIC: 'STATIC'
 };
 
 exports.WorkoutStatus = exports.$Enums.WorkoutStatus = {
