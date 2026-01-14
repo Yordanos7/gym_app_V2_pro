@@ -64,6 +64,41 @@ export default function ProgramDetailScreen() {
     }
   };
 
+  const handleQuit = async () => {
+    if (!session?.user?.id) return;
+
+    Alert.alert(
+        "Quit Program", 
+        "Are you sure you want to stop this training plan? It will be removed from your dashboard.",
+        [
+            { text: "Keep Training", style: "cancel" },
+            { 
+                text: "Yes, Stop", 
+                style: "destructive",
+                onPress: async () => {
+                    setIsEnrolling(true);
+                    try {
+                        const response = await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/programs/quit`, {
+                            method: 'POST',
+                            body: JSON.stringify({ userId: session.user.id })
+                        });
+                        
+                        if (response.ok) {
+                            Alert.alert("Stopped", "Program removed from your dashboard.", [
+                                { text: "OK", onPress: () => router.replace("/(tabs)") }
+                            ]);
+                        }
+                    } catch (error) {
+                        console.error(error);
+                    } finally {
+                        setIsEnrolling(false);
+                    }
+                }
+            }
+        ]
+    );
+  };
+
   if (loading) {
     return (
       <View className="flex-1 justify-center items-center bg-black">
@@ -182,9 +217,24 @@ export default function ProgramDetailScreen() {
       </ScrollView>
 
       {/* Floating Action Button */}
-      {!isActive && (
-        <View className="absolute bottom-6 left-6 right-6">
-            <Animated.View entering={FadeInUp.delay(800).springify()}>
+      <View className="absolute bottom-6 left-6 right-6">
+        <Animated.View entering={FadeInUp.delay(800).springify()}>
+          {isActive ? (
+            <TouchableOpacity 
+                className="w-full bg-zinc-900 h-16 rounded-2xl flex-row items-center justify-center border border-red-500/20 shadow-lg active:opacity-90"
+                onPress={handleQuit}
+                disabled={isEnrolling}
+            >
+                {isEnrolling ? (
+                    <ActivityIndicator color="#ef4444" />
+                ) : (
+                    <>
+                        <Text className="text-red-500 font-black text-lg uppercase tracking-widest mr-2">Quit Program</Text>
+                        <Ionicons name="close-circle" size={24} color="#ef4444" />
+                    </>
+                )}
+            </TouchableOpacity>
+          ) : (
             <TouchableOpacity 
                 className="w-full bg-[#C6FF00] h-16 rounded-2xl flex-row items-center justify-center shadow-lg shadow-[#C6FF00]/20 active:opacity-90"
                 onPress={handleEnroll}
@@ -199,9 +249,9 @@ export default function ProgramDetailScreen() {
                     </>
                 )}
             </TouchableOpacity>
-            </Animated.View>
-        </View>
-      )}
+          )}
+        </Animated.View>
+      </View>
     </View>
   );
 }

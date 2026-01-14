@@ -93,11 +93,25 @@ router.get("/", async (req, res) => {
       if (duration === 0 && exerciseCount > 0) duration = 45;
     }
 
+    // Map JS getDay() (0-6, 0 is Sunday) to 1-7 (where 1 is Sunday as per seed/schema convention)
+    // Actually, seeds often use 1 for Monday. Let's check common convention.
+    // Let's assume 1=Monday, 2=Tuesday... 7=Sunday. 
+    // JS getDay(): 0=Sun, 1=Mon, 2=Tue, 3=Wed, 4=Thu, 5=Fri, 6=Sat
+    let currentDayOfWeek = new Date().getDay(); 
+    if (currentDayOfWeek === 0) currentDayOfWeek = 7; // Map Sunday from 0 to 7
+
+    const scheduledDay = user?.activeProgram?.days.find(d => d.dayOfWeek === currentDayOfWeek);
+
     res.json({
       userName: user?.name || session.user.name,
       streak,
       goal: profile?.goal,
       activeProgram: user?.activeProgram,
+      scheduledToday: scheduledDay ? {
+        id: scheduledDay.id,
+        title: scheduledDay.title,
+        exerciseCount: scheduledDay.exercises.length,
+      } : null,
       todaysWorkout: todaysWorkout ? {
         ...todaysWorkout,
         exerciseCount,

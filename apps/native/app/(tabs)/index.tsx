@@ -14,6 +14,7 @@ type DashboardData = {
   streak: number;
   goal: string;
   activeProgram: any;
+  scheduledToday: any;
   todaysWorkout: any;
 };
 
@@ -154,16 +155,27 @@ export default function HomeScreen() {
                 </TouchableOpacity>
             </View>
             
-            {data?.todaysWorkout ? (
+            {(data?.todaysWorkout || data?.scheduledToday) ? (
               <TouchableOpacity 
                 activeOpacity={0.9}
                 className="bg-content1 border border-white/5 p-6 rounded-[32px] shadow-2xl overflow-hidden"
-                onPress={() => router.push(`/workout/${data.todaysWorkout.id}`)}
+                onPress={() => {
+                    if (data.todaysWorkout) {
+                        router.push(`/workout/${data.todaysWorkout.id}`);
+                    } else if (data.scheduledToday) {
+                        // In a real app, this might start a new session from the program day
+                        router.push(`/program/${data.activeProgram.id}`);
+                    }
+                }}
               >
                 <View className="flex-row justify-between items-start mb-4">
                     <View>
-                        <Text className="text-primary text-xs font-black uppercase tracking-[3px] mb-1">Workout of the Day</Text>
-                        <Text className="text-black text-2xl font-bold">Scheduled Session</Text>
+                        <Text className="text-primary text-xs font-black uppercase tracking-[3px] mb-1">
+                            {data.todaysWorkout ? "Workout of the Day" : "Scheduled for Today"}
+                        </Text>
+                        <Text className="text-black text-2xl font-bold">
+                            {data.todaysWorkout ? "Scheduled Session" : (data.scheduledToday?.title || "Workout Day")}
+                        </Text>
                     </View>
                     <View className="bg-primary/10 p-2 rounded-full">
                         <Ionicons name="play" size={24} color="#C6FF00" />
@@ -173,11 +185,15 @@ export default function HomeScreen() {
                 <View className="flex-row gap-4 mb-6">
                     <View className="flex-row items-center bg-white/5 px-3 py-1 rounded-full">
                         <Ionicons name="time-outline" size={14} color="#A1A1AA" />
-                        <Text className="text-zinc-800 text-xs ml-1 font-medium">{data.todaysWorkout.duration}m</Text>
+                        <Text className="text-zinc-800 text-xs ml-1 font-medium">
+                            {data.todaysWorkout?.duration || 45}m
+                        </Text>
                     </View>
                     <View className="flex-row items-center bg-white/5 px-3 py-1 rounded-full">
                         <Ionicons name="flash-outline" size={14} color="#A1A1AA" />
-                        <Text className="text-zinc-400 text-xs ml-1 font-medium">{data.todaysWorkout.exerciseCount} Ex</Text>
+                        <Text className="text-zinc-400 text-xs ml-1 font-medium">
+                            {data.todaysWorkout?.exerciseCount || data.scheduledToday?.exerciseCount} Ex
+                        </Text>
                     </View>
                 </View>
 

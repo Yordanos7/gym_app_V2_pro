@@ -69,4 +69,26 @@ router.post("/enroll", async (req, res) => {
   }
 });
 
+router.post("/quit", async (req, res) => {
+  try {
+    const { userId } = req.body;
+
+    if (!userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        activeProgramId: null,
+      },
+    });
+
+    res.json({ success: true, activeProgramId: updatedUser.activeProgramId });
+  } catch (error) {
+    console.error("Quit program error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 export default router;
