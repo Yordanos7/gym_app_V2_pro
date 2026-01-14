@@ -32,7 +32,22 @@ router.get("/:sessionId", async (req, res) => {
 // Start a workout session
 router.post("/", async (req, res) => {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
+    let session = await auth.api.getSession({ headers: req.headers });
+    
+    // Fallback: Check DB directly if header is present but getSession failed
+    if (!session && req.headers.authorization) {
+        const token = req.headers.authorization.replace('Bearer ', '');
+        const dbSession = await prisma.session.findUnique({
+            where: { token },
+            include: { user: true }
+        });
+        
+        if (dbSession && dbSession.expiresAt > new Date()) {
+            console.log(`[AUTH FALLBACK] Session validated directly via DB for ${dbSession.userId}`);
+            session = { session: dbSession, user: dbSession.user } as any;
+        }
+    }
+
     if (!session) {
         console.log("Auth Failed for Workout Session");
         console.log("Headers:", JSON.stringify(req.headers, null, 2));

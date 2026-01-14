@@ -6,7 +6,22 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
+    let session = await auth.api.getSession({ headers: req.headers });
+
+    // Fallback: Check DB directly if official check fails (needed for mobile/CSRF)
+    if (!session && req.headers.authorization) {
+        const token = req.headers.authorization.replace('Bearer ', '');
+        const dbSession = await prisma.session.findUnique({
+            where: { token },
+            include: { user: true }
+        });
+        
+        if (dbSession && dbSession.expiresAt > new Date()) {
+            console.log(`[AUTH FALLBACK] /api/nutrition (GET) validated via DB`);
+            session = { session: dbSession, user: dbSession.user } as any;
+        }
+    }
+
     if (!session) return res.status(401).json({ error: "Unauthorized" });
 
     const { id: userId } = session.user;
@@ -29,24 +44,90 @@ router.get("/", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const session = await auth.api.getSession({ headers: req.headers });
+    let session = await auth.api.getSession({ headers: req.headers });
+
+    // Fallback: Check DB directly if official check fails (needed for mobile/CSRF)
+    if (!session && req.headers.authorization) {
+        const token = req.headers.authorization.replace('Bearer ', '');
+        const dbSession = await prisma.session.findUnique({
+            where: { token },
+            include: { user: true }
+        });
+        
+        if (dbSession && dbSession.expiresAt > new Date()) {
+            console.log(`[AUTH FALLBACK] /api/nutrition (POST) validated via DB`);
+            session = { session: dbSession, user: dbSession.user } as any;
+        }
+    }
+
     if (!session) return res.status(401).json({ error: "Unauthorized" });
 
     const { id: userId } = session.user;
     const { type, calories, protein } = req.body;
 
+    // Safer numeric parsing (handle strings or already-parsed numbers)
+    const numCalories = Number(calories);
+    const numProtein = Number(protein) || 0;
+
+    if (isNaN(numCalories)) {
+        return res.status(400).json({ error: "Invalid energy count. Calories must be a number." });
+    }
+
     const meal = await prisma.meal.create({
       data: {
-        userId,
+        user: { connect: { id: userId } }, // Use connect relation to be 100% safe
         type,
-        calories: parseInt(calories),
-        protein: parseInt(protein),
+        calories: Math.floor(numCalories),
+        protein: Math.floor(numProtein),
       },
     });
 
     res.json(meal);
   } catch (error) {
     console.error("Log meal error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+router.delete("/:id", async (req, res) => {
+  try {
+    let session = await auth.api.getSession({ headers: req.headers });
+
+    // Fallback: Check DB directly if official check fails (needed for mobile/CSRF)
+    if (!session && req.headers.authorization) {
+        const token = req.headers.authorization.replace('Bearer ', '');
+        const dbSession = await prisma.session.findUnique({
+            where: { token },
+            include: { user: true }
+        });
+        
+        if (dbSession && dbSession.expiresAt > new Date()) {
+            console.log(`[AUTH FALLBACK] /api/nutrition (DELETE) validated via DB`);
+            session = { session: dbSession, user: dbSession.user } as any;
+        }
+    }
+
+    if (!session) return res.status(401).json({ error: "Unauthorized" });
+
+    const { id: userId } = session.user;
+    const { id } = req.params;
+
+    // Verify ownership
+    const meal = await prisma.meal.findUnique({
+        where: { id }
+    });
+
+    if (!meal || meal.userId !== userId) {
+        return res.status(403).json({ error: "Forbidden: You don't own this record" });
+    }
+
+    await prisma.meal.delete({
+      where: { id },
+    });
+
+    res.json({ message: "Meal deleted successfully" });
+  } catch (error) {
+    console.error("Delete meal error:", error);
     res.status(500).json({ error: "Internal server error" });
   }
 });

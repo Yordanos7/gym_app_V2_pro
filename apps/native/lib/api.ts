@@ -1,36 +1,45 @@
 import * as SecureStore from 'expo-secure-store';
 import Constants from 'expo-constants';
 
-const SCHEME = Constants.expoConfig?.scheme || 'gymApp';
-
-// Potential keys where Better Auth might store the token
-const TOKEN_KEYS = [
-    `${SCHEME}.better-auth.session_token`,
-    `${SCHEME}.session_token`,
-    'better-auth.session_token',
-    'session_token',
-    // Permutations for different versions of the expo plugin
-    `${SCHEME}.better-auth.session`,
-    'better-auth.session',
-    `${SCHEME}.session`,
-    'session'
-];
+const SCHEME = (Array.isArray(Constants.expoConfig?.scheme) 
+    ? Constants.expoConfig.scheme[0] 
+    : (Constants.expoConfig?.scheme || 'gymApp')) as string;
 
 import { authClient } from "./auth-client";
 
 export async function getSessionToken(): Promise<string | null> {
     try {
-        const { data: session } = await authClient.getSession();
-        
-        if (session?.session?.token) {
-            console.log(`[API] Token retrieved from authClient session object.`);
-            return session.session.token;
+        // Attempt 1: Standard library way
+        const { data: sessionData } = await authClient.getSession();
+        if (sessionData?.session?.token) {
+            console.log(`[API] Token found via authClient.getSession()`);
+            return sessionData.session.token;
         }
 
-        console.warn(`[API] No token found in active session.`);
+        // Attempt 2: Brute-force SecureStore search with all possible keys
+        const possibleKeys = [
+            `${SCHEME}.better-auth.session_token`,
+            `${SCHEME}.session_token`,
+            'better-auth.session_token',
+            'session_token',
+            `${SCHEME}.better-auth.session`,
+            `${SCHEME}.session`,
+            'better-auth.session',
+            'session',
+        ];
+
+        for (const key of possibleKeys) {
+            const token = await SecureStore.getItemAsync(key);
+            if (token) {
+                console.log(`[API] Token found via brute-force key: ${key}`);
+                return token;
+            }
+        }
+
+        console.warn(`[API] FAILED to find any session token.`);
         return null;
     } catch (error) {
-        console.error('[API] Error getting session from authClient:', error);
+        console.error('[API] getSessionToken error:', error);
         return null;
     }
 }
@@ -44,11 +53,20 @@ export async function authFetch(url: string, options: RequestInit = {}) {
     };
 
     if (token) {
+        // Better Auth 1.4+ works best with Bearer or plain token in Authorization
         headers['Authorization'] = `Bearer ${token}`;
+        
+        // Mobile apps often need to explicitly set their origin for CSRF
+        headers['Origin'] = `${SCHEME}://`;
+        
+        // Fallback for some older server-side session checks
+        headers['x-session-token'] = token;
+        
+        // Native fetch doesn't handle cookies like a browser, so we pass it manually
         headers['Cookie'] = `better-auth.session_token=${token}`;
     }
 
-    console.log(`[API] Fetching ${url} (Token: ${token ? 'YES' : 'NO'})`);
+    console.log(`[API] Fetching ${url} | Token: ${token ? 'YES' : 'NO'}`);
     
     return fetch(url, {
         ...options,

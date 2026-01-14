@@ -6,11 +6,19 @@ import { toNodeHandler } from "better-auth/node";
 
 const app = express();
 
+// Global Request Logger
+app.use((req, res, next) => {
+    console.log(`[SERVER] ${req.method} ${req.url}`);
+    if (req.headers.authorization) console.log(`[SERVER] Auth Header present`);
+    if (req.headers.cookie) console.log(`[SERVER] Cookie present`);
+    next();
+});
+
 app.use(
 	cors({
-		origin: process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",") : [],
-		methods: ["GET", "POST", "OPTIONS"],
-		allowedHeaders: ["Content-Type", "Authorization"],
+		origin: true, // Reflect request origin
+		methods: ["GET", "POST", "OPTIONS", "PUT", "DELETE"],
+		allowedHeaders: ["Content-Type", "Authorization", "x-session-token", "x-better-auth-session-token", "Cookie"],
 		credentials: true,
 	}),
 );

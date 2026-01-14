@@ -1,9 +1,11 @@
 import { useState } from "react";
-import { View, Text, TextInput, TouchableOpacity, Alert, Platform } from "react-native";
+import { View, Text, TextInput, TouchableOpacity, Alert, Platform, StatusBar, ActivityIndicator, KeyboardAvoidingView, ScrollView } from "react-native";
 import { useRouter, Stack } from "expo-router";
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Ionicons } from "@expo/vector-icons";
 import { authFetch } from "@/lib/api";
+import { LinearGradient } from "expo-linear-gradient";
+import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
 
 export default function ScheduleWorkoutScreen() {
   const router = useRouter();
@@ -11,6 +13,7 @@ export default function ScheduleWorkoutScreen() {
   const [notes, setNotes] = useState("");
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [mode, setMode] = useState<'date' | 'time'>('date');
 
   const handleSchedule = async () => {
     setLoading(true);
@@ -24,10 +27,12 @@ export default function ScheduleWorkoutScreen() {
       });
 
       if (response.ok) {
-        Alert.alert("Success", "Workout scheduled!");
+        Alert.alert("Success", "Mission locked! Workout scheduled.");
         router.replace("/(tabs)");
       } else {
-        Alert.alert("Error", "Failed to schedule workout");
+        const errorText = await response.text();
+        console.error("Schedule error:", errorText);
+        Alert.alert("Error", "Failed to schedule. Try again.");
       }
     } catch (error) {
       console.error(error);
@@ -36,8 +41,6 @@ export default function ScheduleWorkoutScreen() {
       setLoading(false);
     }
   };
-
-  const [mode, setMode] = useState<'date' | 'time'>('date');
 
   const onChangeDate = (event: any, selectedDate?: Date) => {
     const currentDate = selectedDate || date;
@@ -51,73 +54,116 @@ export default function ScheduleWorkoutScreen() {
   };
 
   return (
-    <View className="flex-1 bg-background p-6 pt-24">
+    <View className="flex-1 bg-black">
+      <StatusBar barStyle="light-content" />
+      <LinearGradient
+        colors={['#18181b', '#000000']}
+        className="absolute inset-0"
+      />
+      
       <Stack.Screen options={{ 
-        title: "Schedule Workout",
-        headerStyle: { backgroundColor: 'transparent' },
-        headerTransparent: true,
-        headerTintColor: '#2563eb',
+        headerShown: false
       }} />
 
-      <Text className="text-3xl font-bold text-foreground mb-8">Plan Your Grind</Text>
-
-      <View className="flex-row justify-between mb-6 space-x-4">
-        <View className="flex-1">
-            <Text className="text-default-500 mb-2 font-semibold">Date</Text>
+      <KeyboardAvoidingView 
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        className="flex-1"
+      >
+        <ScrollView className="flex-1 px-6 pt-16">
+          {/* Header */}
+          <View className="flex-row items-center mb-10">
             <TouchableOpacity 
-                className="bg-content1 p-4 rounded-xl border border-default-200 flex-row items-center justify-between"
-                onPress={() => showMode('date')}
+              onPress={() => router.back()}
+              className="w-10 h-10 rounded-full bg-zinc-900 border border-white/10 items-center justify-center mr-4"
             >
-                <Text className="text-foreground text-sm">{date.toLocaleDateString()}</Text>
-                <Ionicons name="calendar" size={20} className="text-primary" />
+              <Ionicons name="arrow-back" size={20} color="white" />
             </TouchableOpacity>
-        </View>
+            <View>
+              <Text className="text-[#C6FF00] text-xs font-black uppercase tracking-[3px]">Schedule</Text>
+              <Text className="text-white text-3xl font-black italic uppercase tracking-tighter">Plan Your <Text className="text-[#C6FF00]">Grind</Text></Text>
+            </View>
+          </View>
 
-        <View className="flex-1">
-            <Text className="text-default-500 mb-2 font-semibold">Time</Text>
+          <Animated.View entering={FadeInDown.delay(100).duration(800)}>
+            {/* Date Selection */}
+            <View className="mb-6">
+                <Text className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-3 ml-1">When do we start?</Text>
+                <View className="flex-row space-x-4">
+                    <TouchableOpacity 
+                        className="flex-1 bg-zinc-900/50 p-4 rounded-2xl border border-white/10 flex-row items-center justify-between h-16"
+                        onPress={() => showMode('date')}
+                    >
+                        <View className="flex-row items-center">
+                            <Ionicons name="calendar-outline" size={20} color="#C6FF00" className="mr-3" />
+                            <Text className="text-white font-bold ml-2">{date.toLocaleDateString()}</Text>
+                        </View>
+                        <Ionicons name="chevron-forward" size={16} color="#71717a" />
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        className="flex-1 bg-zinc-900/50 p-4 rounded-2xl border border-white/10 flex-row items-center justify-between h-16"
+                        onPress={() => showMode('time')}
+                    >
+                        <View className="flex-row items-center">
+                            <Ionicons name="time-outline" size={20} color="#C6FF00" className="mr-3" />
+                            <Text className="text-white font-bold ml-2">{date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
+                        </View>
+                        <Ionicons name="chevron-forward" size={16} color="#71717a" />
+                    </TouchableOpacity>
+                </View>
+            </View>
+
+            {/* Notes Section */}
+            <View className="mb-10">
+                <Text className="text-zinc-400 text-xs font-bold uppercase tracking-widest mb-3 ml-1">Strategy / Notes (Optional)</Text>
+                <View className="bg-zinc-900/50 rounded-2xl border border-white/10 p-4 min-h-[120px]">
+                    <TextInput
+                        className="text-white font-medium text-base text-left"
+                        placeholder="e.g. Focus on Heavy Squats, Morning Blast..."
+                        placeholderTextColor="#52525b"
+                        value={notes}
+                        onChangeText={setNotes}
+                        multiline
+                        textAlignVertical="top"
+                    />
+                </View>
+            </View>
+
+            {/* Call to Action */}
             <TouchableOpacity 
-                className="bg-content1 p-4 rounded-xl border border-default-200 flex-row items-center justify-between"
-                onPress={() => showMode('time')}
+                className={`w-full bg-[#C6FF00] h-16 rounded-2xl items-center justify-center shadow-[0_0_30px_rgba(198,255,0,0.3)] ${loading ? 'opacity-50' : 'active:opacity-80'}`}
+                onPress={handleSchedule}
+                disabled={loading}
             >
-                <Text className="text-foreground text-sm">{date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</Text>
-                <Ionicons name="time" size={20} className="text-primary" />
+                {loading ? (
+                    <ActivityIndicator color="black" />
+                ) : (
+                    <View className="flex-row items-center">
+                        <Text className="text-black font-black text-lg uppercase tracking-widest mr-2">Lock It In</Text>
+                        <Ionicons name="flash" size={20} color="black" />
+                    </View>
+                )}
             </TouchableOpacity>
-        </View>
-      </View>
-        
+            
+            <Text className="text-zinc-600 text-[10px] text-center mt-6 uppercase font-bold tracking-[2px]">
+                Consistency is the key to mastery
+            </Text>
+          </Animated.View>
+        </ScrollView>
+      </KeyboardAvoidingView>
+
       {showDatePicker && (
         <DateTimePicker
             testID="dateTimePicker"
             value={date}
             mode={mode}
             is24Hour={true}
-            display="default"
+            display={Platform.OS === 'ios' ? 'spinner' : 'default'}
             onChange={onChangeDate}
-            minimumDate={mode === 'date' ? new Date() : undefined}
+            minimumDate={new Date()}
+            themeVariant="dark"
         />
       )}
-
-      <View className="mb-8">
-        <Text className="text-default-500 mb-2 font-semibold">Notes (Optional)</Text>
-        <TextInput
-            className="bg-content1 p-4 rounded-xl border border-default-200 text-foreground text-lg"
-            placeholder="Leg day, Cardio, etc."
-            placeholderTextColor="#9ca3af"
-            value={notes}
-            onChangeText={setNotes}
-            multiline
-        />
-      </View>
-
-      <TouchableOpacity 
-        className={`bg-primary p-4 rounded-2xl items-center shadow-lg ${loading ? 'opacity-70' : ''}`}
-        onPress={handleSchedule}
-        disabled={loading}
-      >
-        <Text className="text-primary-foreground font-bold text-lg">
-            {loading ? "Scheduling..." : "Schedule Workout"}
-        </Text>
-      </TouchableOpacity>
     </View>
   );
 }

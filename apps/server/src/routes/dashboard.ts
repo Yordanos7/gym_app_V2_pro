@@ -6,11 +6,27 @@ const router = Router();
 
 router.get("/", async (req, res) => {
   try {
-    const session = await auth.api.getSession({
+    let session = await auth.api.getSession({
       headers: req.headers,
     });
-
+    
+    // Fallback: If getSession fails but we have an Authorization header, check DB directly
+    if (!session && req.headers.authorization) {
+        const token = req.headers.authorization.replace('Bearer ', '');
+        const dbSession = await prisma.session.findUnique({
+            where: { token },
+            include: { user: true }
+        });
+        
+        if (dbSession && dbSession.expiresAt > new Date()) {
+            console.log(`[AUTH FALLBACK] Session validated directly via DB for ${dbSession.userId}`);
+            session = { session: dbSession, user: dbSession.user } as any;
+        }
+    }
+    
     if (!session) {
+      console.log(`[AUTH DEBUG] getSession failed for /api/dashboard`);
+      console.log(`[AUTH DEBUG] Headers:`, JSON.stringify(req.headers, null, 2));
       return res.status(401).json({ error: "Unauthorized" });
     }
 

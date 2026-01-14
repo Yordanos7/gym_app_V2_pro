@@ -58,12 +58,20 @@ export default function HomeScreen() {
 
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center bg-background">
-        <Animated.View entering={FadeIn.duration(1000)} className="items-center">
-            <View className="w-16 h-16 bg-primary rounded-full items-center justify-center animate-pulse">
-                <Ionicons name="barbell" size={32} color="#0A0A0A" />
+      <View className="flex-1 justify-center items-center bg-obsidian">
+        <Animated.View entering={FadeIn.duration(800)} className="items-center">
+            <View className="relative items-center justify-center mb-8">
+                <View className="absolute w-24 h-24 bg-primary/10 rounded-full" />
+                <View className="bg-primary/5 p-5 rounded-full border border-primary/20 animate-pulse">
+                    <Ionicons name="barbell" size={40} color="#C6FF00" />
+                </View>
             </View>
-            <Text className="text-primary mt-4 font-black tracking-widest uppercase">Initializing Grit...</Text>
+            <Text className="text-primary font-black tracking-[4px] uppercase text-[10px]">Initializing Grit</Text>
+            
+            {/* Minimal loader */}
+            <View className="w-12 h-[2px] bg-zinc-900 mt-6 rounded-full overflow-hidden">
+                <View className="h-full bg-primary w-1/2" />
+            </View>
         </Animated.View>
       </View>
     );

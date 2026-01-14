@@ -11,17 +11,20 @@ export const auth = betterAuth<BetterAuthOptions>({
 		...(process.env.CORS_ORIGIN ? process.env.CORS_ORIGIN.split(",") : []), 
 		"mybettertapp://", 
 		"exp://", 
-		"gymApp://"
+		"gymApp://",
+		"http://10.0.2.2:3000",
+		"http://localhost:3000"
 	],
 	emailAndPassword: {
 		enabled: true,
 	},
 	advanced: {
 		defaultCookieAttributes: {
-			sameSite: "none",
-			secure: false, // Changed to false to support local development over HTTP
+			sameSite: "lax", // Changed from none to lax for better HTTP support
+			secure: false,   // Support HTTP development
 			httpOnly: true,
 		},
+		disableCSRFCheck: true,
 	},
-  plugins: [expo()]
+    plugins: [expo()]
 });

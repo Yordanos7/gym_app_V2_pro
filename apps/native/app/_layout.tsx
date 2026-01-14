@@ -16,23 +16,19 @@ import { useSession } from "@/lib/use-session"; // here is the better auth is ca
 
 import SplashScreen from "@/components/SplashScreen"; 
 
-function AuthCheck() {
+function AuthCheck({ children }: { children: React.ReactNode }) {
   const { data: session, isPending } = useSession();
-  const segments = useSegments(); // this is use for show where the user is in screen 
+  const segments = useSegments();
   const router = useRouter();
 
-   // this useeffect use for make  the auth applied when user is open the app 
   useEffect(() => {
     if (isPending) return;
 
     const inAuthGroup = segments[0] === "(auth)";
-    const inOnboardingGroup = segments[0] === "(onboarding)";
-
+    
     if (!session && !inAuthGroup) {
-      // Redirect to welcome screen if not authenticated
       router.replace("/(auth)/welcome");
     } else if (session && inAuthGroup) {
-      // Redirect to tabs if authenticated and in auth group
       router.replace("/(tabs)");
     }
   }, [session, isPending, segments]);
@@ -41,16 +37,15 @@ function AuthCheck() {
     return <SplashScreen />;
   }
 
-  return null;
+  return <>{children}</>;
 }
- // this is a place where the react native now about the app like make on the screen route 
- // This defines HOW navigation works between the main sections of your app
+
 function StackLayout() {
 	return (
-		<Stack screenOptions={{}}>
-			<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-			<Stack.Screen name="(auth)" options={{ headerShown: false }} />
-			<Stack.Screen name="(onboarding)" options={{ headerShown: false }} />
+		<Stack screenOptions={{ headerShown: false }}>
+			<Stack.Screen name="(tabs)" />
+			<Stack.Screen name="(auth)" />
+			<Stack.Screen name="(onboarding)" />
 			<Stack.Screen
 				name="modal"
 				options={{ title: "Modal", presentation: "modal" }}
@@ -58,15 +53,16 @@ function StackLayout() {
 		</Stack>
 	);
 }
-// this StackLayout() → Navigation rules
+
 export default function Layout() {
 	return (
 		<GestureHandlerRootView style={{ flex: 1 }}>
 			<KeyboardProvider>
 				<AppThemeProvider>
 					<HeroUINativeProvider>
-						<AuthCheck /> 
-						<StackLayout /> 
+						<AuthCheck>
+						  <StackLayout /> 
+						</AuthCheck>
 					</HeroUINativeProvider>
 				</AppThemeProvider>
 			</KeyboardProvider>
