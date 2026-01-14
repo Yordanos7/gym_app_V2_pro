@@ -3425,10 +3425,12 @@ export namespace Prisma {
    */
 
   export type ProgramCountOutputType = {
+    activeUsers: number
     days: number
   }
 
   export type ProgramCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    activeUsers?: boolean | ProgramCountOutputTypeCountActiveUsersArgs
     days?: boolean | ProgramCountOutputTypeCountDaysArgs
   }
 
@@ -3441,6 +3443,13 @@ export namespace Prisma {
      * Select specific fields to fetch from the ProgramCountOutputType
      */
     select?: ProgramCountOutputTypeSelect<ExtArgs> | null
+  }
+
+  /**
+   * ProgramCountOutputType without action
+   */
+  export type ProgramCountOutputTypeCountActiveUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserWhereInput
   }
 
   /**
@@ -3686,6 +3695,7 @@ export namespace Prisma {
     gender: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    activeProgramId: string | null
     emailVerified: boolean | null
     image: string | null
   }
@@ -3698,6 +3708,7 @@ export namespace Prisma {
     gender: string | null
     createdAt: Date | null
     updatedAt: Date | null
+    activeProgramId: string | null
     emailVerified: boolean | null
     image: string | null
   }
@@ -3710,6 +3721,7 @@ export namespace Prisma {
     gender: number
     createdAt: number
     updatedAt: number
+    activeProgramId: number
     emailVerified: number
     image: number
     _all: number
@@ -3724,6 +3736,7 @@ export namespace Prisma {
     gender?: true
     createdAt?: true
     updatedAt?: true
+    activeProgramId?: true
     emailVerified?: true
     image?: true
   }
@@ -3736,6 +3749,7 @@ export namespace Prisma {
     gender?: true
     createdAt?: true
     updatedAt?: true
+    activeProgramId?: true
     emailVerified?: true
     image?: true
   }
@@ -3748,6 +3762,7 @@ export namespace Prisma {
     gender?: true
     createdAt?: true
     updatedAt?: true
+    activeProgramId?: true
     emailVerified?: true
     image?: true
     _all?: true
@@ -3833,6 +3848,7 @@ export namespace Prisma {
     gender: string | null
     createdAt: Date
     updatedAt: Date
+    activeProgramId: string | null
     emailVerified: boolean
     image: string | null
     _count: UserCountAggregateOutputType | null
@@ -3862,11 +3878,13 @@ export namespace Prisma {
     gender?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    activeProgramId?: boolean
     emailVerified?: boolean
     image?: boolean
     profile?: boolean | User$profileArgs<ExtArgs>
     settings?: boolean | User$settingsArgs<ExtArgs>
     equipments?: boolean | User$equipmentsArgs<ExtArgs>
+    activeProgram?: boolean | User$activeProgramArgs<ExtArgs>
     programs?: boolean | User$programsArgs<ExtArgs>
     workouts?: boolean | User$workoutsArgs<ExtArgs>
     bodyTrackings?: boolean | User$bodyTrackingsArgs<ExtArgs>
@@ -3893,8 +3911,10 @@ export namespace Prisma {
     gender?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    activeProgramId?: boolean
     emailVerified?: boolean
     image?: boolean
+    activeProgram?: boolean | User$activeProgramArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -3905,8 +3925,10 @@ export namespace Prisma {
     gender?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    activeProgramId?: boolean
     emailVerified?: boolean
     image?: boolean
+    activeProgram?: boolean | User$activeProgramArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
   export type UserSelectScalar = {
@@ -3917,15 +3939,17 @@ export namespace Prisma {
     gender?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    activeProgramId?: boolean
     emailVerified?: boolean
     image?: boolean
   }
 
-  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "gender" | "createdAt" | "updatedAt" | "emailVerified" | "image", ExtArgs["result"]["user"]>
+  export type UserOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "email" | "password" | "gender" | "createdAt" | "updatedAt" | "activeProgramId" | "emailVerified" | "image", ExtArgs["result"]["user"]>
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     profile?: boolean | User$profileArgs<ExtArgs>
     settings?: boolean | User$settingsArgs<ExtArgs>
     equipments?: boolean | User$equipmentsArgs<ExtArgs>
+    activeProgram?: boolean | User$activeProgramArgs<ExtArgs>
     programs?: boolean | User$programsArgs<ExtArgs>
     workouts?: boolean | User$workoutsArgs<ExtArgs>
     bodyTrackings?: boolean | User$bodyTrackingsArgs<ExtArgs>
@@ -3943,8 +3967,12 @@ export namespace Prisma {
     accounts?: boolean | User$accountsArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
-  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
-  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
+  export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    activeProgram?: boolean | User$activeProgramArgs<ExtArgs>
+  }
+  export type UserIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    activeProgram?: boolean | User$activeProgramArgs<ExtArgs>
+  }
 
   export type $UserPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "User"
@@ -3952,6 +3980,7 @@ export namespace Prisma {
       profile: Prisma.$UserProfilePayload<ExtArgs> | null
       settings: Prisma.$UserSettingsPayload<ExtArgs> | null
       equipments: Prisma.$UserEquipmentPayload<ExtArgs>[]
+      activeProgram: Prisma.$ProgramPayload<ExtArgs> | null
       programs: Prisma.$ProgramPayload<ExtArgs>[]
       workouts: Prisma.$WorkoutSessionPayload<ExtArgs>[]
       bodyTrackings: Prisma.$BodyTrackingPayload<ExtArgs>[]
@@ -3976,6 +4005,7 @@ export namespace Prisma {
       gender: string | null
       createdAt: Date
       updatedAt: Date
+      activeProgramId: string | null
       emailVerified: boolean
       image: string | null
     }, ExtArgs["result"]["user"]>
@@ -4375,6 +4405,7 @@ export namespace Prisma {
     profile<T extends User$profileArgs<ExtArgs> = {}>(args?: Subset<T, User$profileArgs<ExtArgs>>): Prisma__UserProfileClient<$Result.GetResult<Prisma.$UserProfilePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     settings<T extends User$settingsArgs<ExtArgs> = {}>(args?: Subset<T, User$settingsArgs<ExtArgs>>): Prisma__UserSettingsClient<$Result.GetResult<Prisma.$UserSettingsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     equipments<T extends User$equipmentsArgs<ExtArgs> = {}>(args?: Subset<T, User$equipmentsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserEquipmentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    activeProgram<T extends User$activeProgramArgs<ExtArgs> = {}>(args?: Subset<T, User$activeProgramArgs<ExtArgs>>): Prisma__ProgramClient<$Result.GetResult<Prisma.$ProgramPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     programs<T extends User$programsArgs<ExtArgs> = {}>(args?: Subset<T, User$programsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgramPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     workouts<T extends User$workoutsArgs<ExtArgs> = {}>(args?: Subset<T, User$workoutsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$WorkoutSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     bodyTrackings<T extends User$bodyTrackingsArgs<ExtArgs> = {}>(args?: Subset<T, User$bodyTrackingsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$BodyTrackingPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -4426,6 +4457,7 @@ export namespace Prisma {
     readonly gender: FieldRef<"User", 'String'>
     readonly createdAt: FieldRef<"User", 'DateTime'>
     readonly updatedAt: FieldRef<"User", 'DateTime'>
+    readonly activeProgramId: FieldRef<"User", 'String'>
     readonly emailVerified: FieldRef<"User", 'Boolean'>
     readonly image: FieldRef<"User", 'String'>
   }
@@ -4677,6 +4709,10 @@ export namespace Prisma {
      */
     data: UserCreateManyInput | UserCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -4747,6 +4783,10 @@ export namespace Prisma {
      * Limit how many Users to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -4875,6 +4915,25 @@ export namespace Prisma {
     take?: number
     skip?: number
     distinct?: UserEquipmentScalarFieldEnum | UserEquipmentScalarFieldEnum[]
+  }
+
+  /**
+   * User.activeProgram
+   */
+  export type User$activeProgramArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Program
+     */
+    select?: ProgramSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Program
+     */
+    omit?: ProgramOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: ProgramInclude<ExtArgs> | null
+    where?: ProgramWhereInput
   }
 
   /**
@@ -8679,6 +8738,7 @@ export namespace Prisma {
     createdAt?: boolean
     updatedAt?: boolean
     user?: boolean | Program$userArgs<ExtArgs>
+    activeUsers?: boolean | Program$activeUsersArgs<ExtArgs>
     days?: boolean | Program$daysArgs<ExtArgs>
     _count?: boolean | ProgramCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["program"]>
@@ -8718,6 +8778,7 @@ export namespace Prisma {
   export type ProgramOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "name" | "description" | "difficulty" | "createdAt" | "updatedAt", ExtArgs["result"]["program"]>
   export type ProgramInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | Program$userArgs<ExtArgs>
+    activeUsers?: boolean | Program$activeUsersArgs<ExtArgs>
     days?: boolean | Program$daysArgs<ExtArgs>
     _count?: boolean | ProgramCountOutputTypeDefaultArgs<ExtArgs>
   }
@@ -8732,6 +8793,7 @@ export namespace Prisma {
     name: "Program"
     objects: {
       user: Prisma.$UserPayload<ExtArgs> | null
+      activeUsers: Prisma.$UserPayload<ExtArgs>[]
       days: Prisma.$ProgramDayPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
@@ -9137,6 +9199,7 @@ export namespace Prisma {
   export interface Prisma__ProgramClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     user<T extends Program$userArgs<ExtArgs> = {}>(args?: Subset<T, Program$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    activeUsers<T extends Program$activeUsersArgs<ExtArgs> = {}>(args?: Subset<T, Program$activeUsersArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     days<T extends Program$daysArgs<ExtArgs> = {}>(args?: Subset<T, Program$daysArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$ProgramDayPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -9586,6 +9649,30 @@ export namespace Prisma {
      */
     include?: UserInclude<ExtArgs> | null
     where?: UserWhereInput
+  }
+
+  /**
+   * Program.activeUsers
+   */
+  export type Program$activeUsersArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+    orderBy?: UserOrderByWithRelationInput | UserOrderByWithRelationInput[]
+    cursor?: UserWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserScalarFieldEnum | UserScalarFieldEnum[]
   }
 
   /**
@@ -32427,6 +32514,7 @@ export namespace Prisma {
     gender: 'gender',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt',
+    activeProgramId: 'activeProgramId',
     emailVerified: 'emailVerified',
     image: 'image'
   };
@@ -32969,11 +33057,13 @@ export namespace Prisma {
     gender?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    activeProgramId?: StringNullableFilter<"User"> | string | null
     emailVerified?: BoolFilter<"User"> | boolean
     image?: StringNullableFilter<"User"> | string | null
     profile?: XOR<UserProfileNullableScalarRelationFilter, UserProfileWhereInput> | null
     settings?: XOR<UserSettingsNullableScalarRelationFilter, UserSettingsWhereInput> | null
     equipments?: UserEquipmentListRelationFilter
+    activeProgram?: XOR<ProgramNullableScalarRelationFilter, ProgramWhereInput> | null
     programs?: ProgramListRelationFilter
     workouts?: WorkoutSessionListRelationFilter
     bodyTrackings?: BodyTrackingListRelationFilter
@@ -32999,11 +33089,13 @@ export namespace Prisma {
     gender?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    activeProgramId?: SortOrderInput | SortOrder
     emailVerified?: SortOrder
     image?: SortOrderInput | SortOrder
     profile?: UserProfileOrderByWithRelationInput
     settings?: UserSettingsOrderByWithRelationInput
     equipments?: UserEquipmentOrderByRelationAggregateInput
+    activeProgram?: ProgramOrderByWithRelationInput
     programs?: ProgramOrderByRelationAggregateInput
     workouts?: WorkoutSessionOrderByRelationAggregateInput
     bodyTrackings?: BodyTrackingOrderByRelationAggregateInput
@@ -33032,11 +33124,13 @@ export namespace Prisma {
     gender?: StringNullableFilter<"User"> | string | null
     createdAt?: DateTimeFilter<"User"> | Date | string
     updatedAt?: DateTimeFilter<"User"> | Date | string
+    activeProgramId?: StringNullableFilter<"User"> | string | null
     emailVerified?: BoolFilter<"User"> | boolean
     image?: StringNullableFilter<"User"> | string | null
     profile?: XOR<UserProfileNullableScalarRelationFilter, UserProfileWhereInput> | null
     settings?: XOR<UserSettingsNullableScalarRelationFilter, UserSettingsWhereInput> | null
     equipments?: UserEquipmentListRelationFilter
+    activeProgram?: XOR<ProgramNullableScalarRelationFilter, ProgramWhereInput> | null
     programs?: ProgramListRelationFilter
     workouts?: WorkoutSessionListRelationFilter
     bodyTrackings?: BodyTrackingListRelationFilter
@@ -33062,6 +33156,7 @@ export namespace Prisma {
     gender?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    activeProgramId?: SortOrderInput | SortOrder
     emailVerified?: SortOrder
     image?: SortOrderInput | SortOrder
     _count?: UserCountOrderByAggregateInput
@@ -33080,6 +33175,7 @@ export namespace Prisma {
     gender?: StringNullableWithAggregatesFilter<"User"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+    activeProgramId?: StringNullableWithAggregatesFilter<"User"> | string | null
     emailVerified?: BoolWithAggregatesFilter<"User"> | boolean
     image?: StringNullableWithAggregatesFilter<"User"> | string | null
   }
@@ -33273,6 +33369,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Program"> | Date | string
     updatedAt?: DateTimeFilter<"Program"> | Date | string
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    activeUsers?: UserListRelationFilter
     days?: ProgramDayListRelationFilter
   }
 
@@ -33285,6 +33382,7 @@ export namespace Prisma {
     createdAt?: SortOrder
     updatedAt?: SortOrder
     user?: UserOrderByWithRelationInput
+    activeUsers?: UserOrderByRelationAggregateInput
     days?: ProgramDayOrderByRelationAggregateInput
   }
 
@@ -33300,6 +33398,7 @@ export namespace Prisma {
     createdAt?: DateTimeFilter<"Program"> | Date | string
     updatedAt?: DateTimeFilter<"Program"> | Date | string
     user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
+    activeUsers?: UserListRelationFilter
     days?: ProgramDayListRelationFilter
   }, "id">
 
@@ -34593,6 +34692,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -34618,6 +34718,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -34653,6 +34754,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -34678,6 +34780,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -34708,6 +34811,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
   }
@@ -34732,6 +34836,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
   }
@@ -34923,6 +35028,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user?: UserCreateNestedOneWithoutProgramsInput
+    activeUsers?: UserCreateNestedManyWithoutActiveProgramInput
     days?: ProgramDayCreateNestedManyWithoutProgramInput
   }
 
@@ -34934,6 +35040,7 @@ export namespace Prisma {
     difficulty: $Enums.Level
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeUsers?: UserUncheckedCreateNestedManyWithoutActiveProgramInput
     days?: ProgramDayUncheckedCreateNestedManyWithoutProgramInput
   }
 
@@ -34945,6 +35052,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutProgramsNestedInput
+    activeUsers?: UserUpdateManyWithoutActiveProgramNestedInput
     days?: ProgramDayUpdateManyWithoutProgramNestedInput
   }
 
@@ -34956,6 +35064,7 @@ export namespace Prisma {
     difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeUsers?: UserUncheckedUpdateManyWithoutActiveProgramNestedInput
     days?: ProgramDayUncheckedUpdateManyWithoutProgramNestedInput
   }
 
@@ -36308,6 +36417,11 @@ export namespace Prisma {
     none?: UserEquipmentWhereInput
   }
 
+  export type ProgramNullableScalarRelationFilter = {
+    is?: ProgramWhereInput | null
+    isNot?: ProgramWhereInput | null
+  }
+
   export type ProgramListRelationFilter = {
     every?: ProgramWhereInput
     some?: ProgramWhereInput
@@ -36465,6 +36579,7 @@ export namespace Prisma {
     gender?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    activeProgramId?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrder
   }
@@ -36477,6 +36592,7 @@ export namespace Prisma {
     gender?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    activeProgramId?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrder
   }
@@ -36489,6 +36605,7 @@ export namespace Prisma {
     gender?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    activeProgramId?: SortOrder
     emailVerified?: SortOrder
     image?: SortOrder
   }
@@ -36756,10 +36873,20 @@ export namespace Prisma {
     isNot?: UserWhereInput | null
   }
 
+  export type UserListRelationFilter = {
+    every?: UserWhereInput
+    some?: UserWhereInput
+    none?: UserWhereInput
+  }
+
   export type ProgramDayListRelationFilter = {
     every?: ProgramDayWhereInput
     some?: ProgramDayWhereInput
     none?: ProgramDayWhereInput
+  }
+
+  export type UserOrderByRelationAggregateInput = {
+    _count?: SortOrder
   }
 
   export type ProgramDayOrderByRelationAggregateInput = {
@@ -37679,6 +37806,12 @@ export namespace Prisma {
     connect?: UserEquipmentWhereUniqueInput | UserEquipmentWhereUniqueInput[]
   }
 
+  export type ProgramCreateNestedOneWithoutActiveUsersInput = {
+    create?: XOR<ProgramCreateWithoutActiveUsersInput, ProgramUncheckedCreateWithoutActiveUsersInput>
+    connectOrCreate?: ProgramCreateOrConnectWithoutActiveUsersInput
+    connect?: ProgramWhereUniqueInput
+  }
+
   export type ProgramCreateNestedManyWithoutUserInput = {
     create?: XOR<ProgramCreateWithoutUserInput, ProgramUncheckedCreateWithoutUserInput> | ProgramCreateWithoutUserInput[] | ProgramUncheckedCreateWithoutUserInput[]
     connectOrCreate?: ProgramCreateOrConnectWithoutUserInput | ProgramCreateOrConnectWithoutUserInput[]
@@ -37956,6 +38089,16 @@ export namespace Prisma {
     update?: UserEquipmentUpdateWithWhereUniqueWithoutUserInput | UserEquipmentUpdateWithWhereUniqueWithoutUserInput[]
     updateMany?: UserEquipmentUpdateManyWithWhereWithoutUserInput | UserEquipmentUpdateManyWithWhereWithoutUserInput[]
     deleteMany?: UserEquipmentScalarWhereInput | UserEquipmentScalarWhereInput[]
+  }
+
+  export type ProgramUpdateOneWithoutActiveUsersNestedInput = {
+    create?: XOR<ProgramCreateWithoutActiveUsersInput, ProgramUncheckedCreateWithoutActiveUsersInput>
+    connectOrCreate?: ProgramCreateOrConnectWithoutActiveUsersInput
+    upsert?: ProgramUpsertWithoutActiveUsersInput
+    disconnect?: ProgramWhereInput | boolean
+    delete?: ProgramWhereInput | boolean
+    connect?: ProgramWhereUniqueInput
+    update?: XOR<XOR<ProgramUpdateToOneWithWhereWithoutActiveUsersInput, ProgramUpdateWithoutActiveUsersInput>, ProgramUncheckedUpdateWithoutActiveUsersInput>
   }
 
   export type ProgramUpdateManyWithoutUserNestedInput = {
@@ -38488,11 +38631,25 @@ export namespace Prisma {
     connect?: UserWhereUniqueInput
   }
 
+  export type UserCreateNestedManyWithoutActiveProgramInput = {
+    create?: XOR<UserCreateWithoutActiveProgramInput, UserUncheckedCreateWithoutActiveProgramInput> | UserCreateWithoutActiveProgramInput[] | UserUncheckedCreateWithoutActiveProgramInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutActiveProgramInput | UserCreateOrConnectWithoutActiveProgramInput[]
+    createMany?: UserCreateManyActiveProgramInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+  }
+
   export type ProgramDayCreateNestedManyWithoutProgramInput = {
     create?: XOR<ProgramDayCreateWithoutProgramInput, ProgramDayUncheckedCreateWithoutProgramInput> | ProgramDayCreateWithoutProgramInput[] | ProgramDayUncheckedCreateWithoutProgramInput[]
     connectOrCreate?: ProgramDayCreateOrConnectWithoutProgramInput | ProgramDayCreateOrConnectWithoutProgramInput[]
     createMany?: ProgramDayCreateManyProgramInputEnvelope
     connect?: ProgramDayWhereUniqueInput | ProgramDayWhereUniqueInput[]
+  }
+
+  export type UserUncheckedCreateNestedManyWithoutActiveProgramInput = {
+    create?: XOR<UserCreateWithoutActiveProgramInput, UserUncheckedCreateWithoutActiveProgramInput> | UserCreateWithoutActiveProgramInput[] | UserUncheckedCreateWithoutActiveProgramInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutActiveProgramInput | UserCreateOrConnectWithoutActiveProgramInput[]
+    createMany?: UserCreateManyActiveProgramInputEnvelope
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
   }
 
   export type ProgramDayUncheckedCreateNestedManyWithoutProgramInput = {
@@ -38512,6 +38669,20 @@ export namespace Prisma {
     update?: XOR<XOR<UserUpdateToOneWithWhereWithoutProgramsInput, UserUpdateWithoutProgramsInput>, UserUncheckedUpdateWithoutProgramsInput>
   }
 
+  export type UserUpdateManyWithoutActiveProgramNestedInput = {
+    create?: XOR<UserCreateWithoutActiveProgramInput, UserUncheckedCreateWithoutActiveProgramInput> | UserCreateWithoutActiveProgramInput[] | UserUncheckedCreateWithoutActiveProgramInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutActiveProgramInput | UserCreateOrConnectWithoutActiveProgramInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutActiveProgramInput | UserUpsertWithWhereUniqueWithoutActiveProgramInput[]
+    createMany?: UserCreateManyActiveProgramInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutActiveProgramInput | UserUpdateWithWhereUniqueWithoutActiveProgramInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutActiveProgramInput | UserUpdateManyWithWhereWithoutActiveProgramInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
+  }
+
   export type ProgramDayUpdateManyWithoutProgramNestedInput = {
     create?: XOR<ProgramDayCreateWithoutProgramInput, ProgramDayUncheckedCreateWithoutProgramInput> | ProgramDayCreateWithoutProgramInput[] | ProgramDayUncheckedCreateWithoutProgramInput[]
     connectOrCreate?: ProgramDayCreateOrConnectWithoutProgramInput | ProgramDayCreateOrConnectWithoutProgramInput[]
@@ -38524,6 +38695,20 @@ export namespace Prisma {
     update?: ProgramDayUpdateWithWhereUniqueWithoutProgramInput | ProgramDayUpdateWithWhereUniqueWithoutProgramInput[]
     updateMany?: ProgramDayUpdateManyWithWhereWithoutProgramInput | ProgramDayUpdateManyWithWhereWithoutProgramInput[]
     deleteMany?: ProgramDayScalarWhereInput | ProgramDayScalarWhereInput[]
+  }
+
+  export type UserUncheckedUpdateManyWithoutActiveProgramNestedInput = {
+    create?: XOR<UserCreateWithoutActiveProgramInput, UserUncheckedCreateWithoutActiveProgramInput> | UserCreateWithoutActiveProgramInput[] | UserUncheckedCreateWithoutActiveProgramInput[]
+    connectOrCreate?: UserCreateOrConnectWithoutActiveProgramInput | UserCreateOrConnectWithoutActiveProgramInput[]
+    upsert?: UserUpsertWithWhereUniqueWithoutActiveProgramInput | UserUpsertWithWhereUniqueWithoutActiveProgramInput[]
+    createMany?: UserCreateManyActiveProgramInputEnvelope
+    set?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    disconnect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    delete?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    connect?: UserWhereUniqueInput | UserWhereUniqueInput[]
+    update?: UserUpdateWithWhereUniqueWithoutActiveProgramInput | UserUpdateWithWhereUniqueWithoutActiveProgramInput[]
+    updateMany?: UserUpdateManyWithWhereWithoutActiveProgramInput | UserUpdateManyWithWhereWithoutActiveProgramInput[]
+    deleteMany?: UserScalarWhereInput | UserScalarWhereInput[]
   }
 
   export type ProgramDayUncheckedUpdateManyWithoutProgramNestedInput = {
@@ -39773,6 +39958,33 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type ProgramCreateWithoutActiveUsersInput = {
+    id?: string
+    name: string
+    description?: string | null
+    difficulty: $Enums.Level
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutProgramsInput
+    days?: ProgramDayCreateNestedManyWithoutProgramInput
+  }
+
+  export type ProgramUncheckedCreateWithoutActiveUsersInput = {
+    id?: string
+    userId?: string | null
+    name: string
+    description?: string | null
+    difficulty: $Enums.Level
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    days?: ProgramDayUncheckedCreateNestedManyWithoutProgramInput
+  }
+
+  export type ProgramCreateOrConnectWithoutActiveUsersInput = {
+    where: ProgramWhereUniqueInput
+    create: XOR<ProgramCreateWithoutActiveUsersInput, ProgramUncheckedCreateWithoutActiveUsersInput>
+  }
+
   export type ProgramCreateWithoutUserInput = {
     id?: string
     name: string
@@ -39780,6 +39992,7 @@ export namespace Prisma {
     difficulty: $Enums.Level
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeUsers?: UserCreateNestedManyWithoutActiveProgramInput
     days?: ProgramDayCreateNestedManyWithoutProgramInput
   }
 
@@ -39790,6 +40003,7 @@ export namespace Prisma {
     difficulty: $Enums.Level
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeUsers?: UserUncheckedCreateNestedManyWithoutActiveProgramInput
     days?: ProgramDayUncheckedCreateNestedManyWithoutProgramInput
   }
 
@@ -40254,6 +40468,39 @@ export namespace Prisma {
     name?: StringFilter<"UserEquipment"> | string
   }
 
+  export type ProgramUpsertWithoutActiveUsersInput = {
+    update: XOR<ProgramUpdateWithoutActiveUsersInput, ProgramUncheckedUpdateWithoutActiveUsersInput>
+    create: XOR<ProgramCreateWithoutActiveUsersInput, ProgramUncheckedCreateWithoutActiveUsersInput>
+    where?: ProgramWhereInput
+  }
+
+  export type ProgramUpdateToOneWithWhereWithoutActiveUsersInput = {
+    where?: ProgramWhereInput
+    data: XOR<ProgramUpdateWithoutActiveUsersInput, ProgramUncheckedUpdateWithoutActiveUsersInput>
+  }
+
+  export type ProgramUpdateWithoutActiveUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutProgramsNestedInput
+    days?: ProgramDayUpdateManyWithoutProgramNestedInput
+  }
+
+  export type ProgramUncheckedUpdateWithoutActiveUsersInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    days?: ProgramDayUncheckedUpdateManyWithoutProgramNestedInput
+  }
+
   export type ProgramUpsertWithWhereUniqueWithoutUserInput = {
     where: ProgramWhereUniqueInput
     update: XOR<ProgramUpdateWithoutUserInput, ProgramUncheckedUpdateWithoutUserInput>
@@ -40677,6 +40924,7 @@ export namespace Prisma {
     image?: string | null
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -40702,6 +40950,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     settings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
@@ -40751,6 +41000,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -40776,6 +41026,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     settings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
@@ -40809,6 +41060,7 @@ export namespace Prisma {
     image?: string | null
     profile?: UserProfileCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -40834,6 +41086,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -40883,6 +41136,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -40908,6 +41162,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -40941,6 +41196,7 @@ export namespace Prisma {
     image?: string | null
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -40966,6 +41222,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -41015,6 +41272,7 @@ export namespace Prisma {
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -41040,6 +41298,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -41074,6 +41333,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
     weights?: WeightEntryCreateNestedManyWithoutUserInput
@@ -41098,6 +41358,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -41122,6 +41383,76 @@ export namespace Prisma {
   export type UserCreateOrConnectWithoutProgramsInput = {
     where: UserWhereUniqueInput
     create: XOR<UserCreateWithoutProgramsInput, UserUncheckedCreateWithoutProgramsInput>
+  }
+
+  export type UserCreateWithoutActiveProgramInput = {
+    id?: string
+    name?: string | null
+    email: string
+    password?: string | null
+    gender?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    emailVerified?: boolean
+    image?: string | null
+    profile?: UserProfileCreateNestedOneWithoutUserInput
+    settings?: UserSettingsCreateNestedOneWithoutUserInput
+    equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    programs?: ProgramCreateNestedManyWithoutUserInput
+    workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
+    bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
+    weights?: WeightEntryCreateNestedManyWithoutUserInput
+    meals?: MealCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    achievements?: UserAchievementCreateNestedManyWithoutUserInput
+    favorites?: FavoriteExerciseCreateNestedManyWithoutUserInput
+    chatMessages?: AiChatMessageCreateNestedManyWithoutUserInput
+    streaks?: DailyStreakCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionCreateNestedManyWithoutUserInput
+    friendRequestsSent?: FriendshipCreateNestedManyWithoutRequesterInput
+    friendRequestsReceived?: FriendshipCreateNestedManyWithoutAddresseeInput
+    sessions?: SessionCreateNestedManyWithoutUserInput
+    accounts?: AccountCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutActiveProgramInput = {
+    id?: string
+    name?: string | null
+    email: string
+    password?: string | null
+    gender?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    emailVerified?: boolean
+    image?: string | null
+    profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
+    settings?: UserSettingsUncheckedCreateNestedOneWithoutUserInput
+    equipments?: UserEquipmentUncheckedCreateNestedManyWithoutUserInput
+    programs?: ProgramUncheckedCreateNestedManyWithoutUserInput
+    workouts?: WorkoutSessionUncheckedCreateNestedManyWithoutUserInput
+    bodyTrackings?: BodyTrackingUncheckedCreateNestedManyWithoutUserInput
+    weights?: WeightEntryUncheckedCreateNestedManyWithoutUserInput
+    meals?: MealUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    achievements?: UserAchievementUncheckedCreateNestedManyWithoutUserInput
+    favorites?: FavoriteExerciseUncheckedCreateNestedManyWithoutUserInput
+    chatMessages?: AiChatMessageUncheckedCreateNestedManyWithoutUserInput
+    streaks?: DailyStreakUncheckedCreateNestedManyWithoutUserInput
+    subscriptions?: SubscriptionUncheckedCreateNestedManyWithoutUserInput
+    friendRequestsSent?: FriendshipUncheckedCreateNestedManyWithoutRequesterInput
+    friendRequestsReceived?: FriendshipUncheckedCreateNestedManyWithoutAddresseeInput
+    sessions?: SessionUncheckedCreateNestedManyWithoutUserInput
+    accounts?: AccountUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutActiveProgramInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutActiveProgramInput, UserUncheckedCreateWithoutActiveProgramInput>
+  }
+
+  export type UserCreateManyActiveProgramInputEnvelope = {
+    data: UserCreateManyActiveProgramInput | UserCreateManyActiveProgramInput[]
+    skipDuplicates?: boolean
   }
 
   export type ProgramDayCreateWithoutProgramInput = {
@@ -41172,6 +41503,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
     weights?: WeightEntryUpdateManyWithoutUserNestedInput
@@ -41196,6 +41528,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -41215,6 +41548,38 @@ export namespace Prisma {
     friendRequestsReceived?: FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
     sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
     accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUpsertWithWhereUniqueWithoutActiveProgramInput = {
+    where: UserWhereUniqueInput
+    update: XOR<UserUpdateWithoutActiveProgramInput, UserUncheckedUpdateWithoutActiveProgramInput>
+    create: XOR<UserCreateWithoutActiveProgramInput, UserUncheckedCreateWithoutActiveProgramInput>
+  }
+
+  export type UserUpdateWithWhereUniqueWithoutActiveProgramInput = {
+    where: UserWhereUniqueInput
+    data: XOR<UserUpdateWithoutActiveProgramInput, UserUncheckedUpdateWithoutActiveProgramInput>
+  }
+
+  export type UserUpdateManyWithWhereWithoutActiveProgramInput = {
+    where: UserScalarWhereInput
+    data: XOR<UserUpdateManyMutationInput, UserUncheckedUpdateManyWithoutActiveProgramInput>
+  }
+
+  export type UserScalarWhereInput = {
+    AND?: UserScalarWhereInput | UserScalarWhereInput[]
+    OR?: UserScalarWhereInput[]
+    NOT?: UserScalarWhereInput | UserScalarWhereInput[]
+    id?: StringFilter<"User"> | string
+    name?: StringNullableFilter<"User"> | string | null
+    email?: StringFilter<"User"> | string
+    password?: StringNullableFilter<"User"> | string | null
+    gender?: StringNullableFilter<"User"> | string | null
+    createdAt?: DateTimeFilter<"User"> | Date | string
+    updatedAt?: DateTimeFilter<"User"> | Date | string
+    activeProgramId?: StringNullableFilter<"User"> | string | null
+    emailVerified?: BoolFilter<"User"> | boolean
+    image?: StringNullableFilter<"User"> | string | null
   }
 
   export type ProgramDayUpsertWithWhereUniqueWithoutProgramInput = {
@@ -41251,6 +41616,7 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     user?: UserCreateNestedOneWithoutProgramsInput
+    activeUsers?: UserCreateNestedManyWithoutActiveProgramInput
   }
 
   export type ProgramUncheckedCreateWithoutDaysInput = {
@@ -41261,6 +41627,7 @@ export namespace Prisma {
     difficulty: $Enums.Level
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeUsers?: UserUncheckedCreateNestedManyWithoutActiveProgramInput
   }
 
   export type ProgramCreateOrConnectWithoutDaysInput = {
@@ -41307,6 +41674,7 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     user?: UserUpdateOneWithoutProgramsNestedInput
+    activeUsers?: UserUpdateManyWithoutActiveProgramNestedInput
   }
 
   export type ProgramUncheckedUpdateWithoutDaysInput = {
@@ -41317,6 +41685,7 @@ export namespace Prisma {
     difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeUsers?: UserUncheckedUpdateManyWithoutActiveProgramNestedInput
   }
 
   export type ProgramExerciseUpsertWithWhereUniqueWithoutProgramDayInput = {
@@ -41779,6 +42148,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
     weights?: WeightEntryCreateNestedManyWithoutUserInput
@@ -41803,6 +42173,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -41875,6 +42246,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
     weights?: WeightEntryUpdateManyWithoutUserNestedInput
@@ -41899,6 +42271,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -42156,6 +42529,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     weights?: WeightEntryCreateNestedManyWithoutUserInput
@@ -42180,6 +42554,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -42230,6 +42605,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     weights?: WeightEntryUpdateManyWithoutUserNestedInput
@@ -42254,6 +42630,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -42288,6 +42665,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -42312,6 +42690,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -42362,6 +42741,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -42386,6 +42766,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -42420,6 +42801,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -42444,6 +42826,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -42494,6 +42877,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -42518,6 +42902,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -42552,6 +42937,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -42576,6 +42962,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -42626,6 +43013,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -42650,6 +43038,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -42722,6 +43111,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -42746,6 +43136,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -42817,6 +43208,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -42841,6 +43233,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -42902,6 +43295,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -42926,6 +43320,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -43005,6 +43400,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -43029,6 +43425,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -43098,6 +43495,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -43122,6 +43520,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -43172,6 +43571,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -43196,6 +43596,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -43230,6 +43631,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -43254,6 +43656,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -43304,6 +43707,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -43328,6 +43732,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -43362,6 +43767,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -43386,6 +43792,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -43436,6 +43843,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -43460,6 +43868,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -43494,6 +43903,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -43518,6 +43928,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -43557,6 +43968,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -43581,6 +43993,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -43631,6 +44044,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -43655,6 +44069,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -43700,6 +44115,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -43724,6 +44140,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -43758,6 +44175,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -43782,6 +44200,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -43832,6 +44251,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -43856,6 +44276,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -43890,6 +44311,7 @@ export namespace Prisma {
     profile?: UserProfileCreateNestedOneWithoutUserInput
     settings?: UserSettingsCreateNestedOneWithoutUserInput
     equipments?: UserEquipmentCreateNestedManyWithoutUserInput
+    activeProgram?: ProgramCreateNestedOneWithoutActiveUsersInput
     programs?: ProgramCreateNestedManyWithoutUserInput
     workouts?: WorkoutSessionCreateNestedManyWithoutUserInput
     bodyTrackings?: BodyTrackingCreateNestedManyWithoutUserInput
@@ -43914,6 +44336,7 @@ export namespace Prisma {
     gender?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    activeProgramId?: string | null
     emailVerified?: boolean
     image?: string | null
     profile?: UserProfileUncheckedCreateNestedOneWithoutUserInput
@@ -43964,6 +44387,7 @@ export namespace Prisma {
     profile?: UserProfileUpdateOneWithoutUserNestedInput
     settings?: UserSettingsUpdateOneWithoutUserNestedInput
     equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    activeProgram?: ProgramUpdateOneWithoutActiveUsersNestedInput
     programs?: ProgramUpdateManyWithoutUserNestedInput
     workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
     bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
@@ -43988,6 +44412,7 @@ export namespace Prisma {
     gender?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeProgramId?: NullableStringFieldUpdateOperationsInput | string | null
     emailVerified?: BoolFieldUpdateOperationsInput | boolean
     image?: NullableStringFieldUpdateOperationsInput | string | null
     profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
@@ -44158,6 +44583,7 @@ export namespace Prisma {
     difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeUsers?: UserUpdateManyWithoutActiveProgramNestedInput
     days?: ProgramDayUpdateManyWithoutProgramNestedInput
   }
 
@@ -44168,6 +44594,7 @@ export namespace Prisma {
     difficulty?: EnumLevelFieldUpdateOperationsInput | $Enums.Level
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    activeUsers?: UserUncheckedUpdateManyWithoutActiveProgramNestedInput
     days?: ProgramDayUncheckedUpdateManyWithoutProgramNestedInput
   }
 
@@ -44521,10 +44948,94 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type UserCreateManyActiveProgramInput = {
+    id?: string
+    name?: string | null
+    email: string
+    password?: string | null
+    gender?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    emailVerified?: boolean
+    image?: string | null
+  }
+
   export type ProgramDayCreateManyProgramInput = {
     id?: string
     dayOfWeek: number
     title: string
+  }
+
+  export type UserUpdateWithoutActiveProgramInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    profile?: UserProfileUpdateOneWithoutUserNestedInput
+    settings?: UserSettingsUpdateOneWithoutUserNestedInput
+    equipments?: UserEquipmentUpdateManyWithoutUserNestedInput
+    programs?: ProgramUpdateManyWithoutUserNestedInput
+    workouts?: WorkoutSessionUpdateManyWithoutUserNestedInput
+    bodyTrackings?: BodyTrackingUpdateManyWithoutUserNestedInput
+    weights?: WeightEntryUpdateManyWithoutUserNestedInput
+    meals?: MealUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    achievements?: UserAchievementUpdateManyWithoutUserNestedInput
+    favorites?: FavoriteExerciseUpdateManyWithoutUserNestedInput
+    chatMessages?: AiChatMessageUpdateManyWithoutUserNestedInput
+    streaks?: DailyStreakUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUpdateManyWithoutUserNestedInput
+    friendRequestsSent?: FriendshipUpdateManyWithoutRequesterNestedInput
+    friendRequestsReceived?: FriendshipUpdateManyWithoutAddresseeNestedInput
+    sessions?: SessionUpdateManyWithoutUserNestedInput
+    accounts?: AccountUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutActiveProgramInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
+    profile?: UserProfileUncheckedUpdateOneWithoutUserNestedInput
+    settings?: UserSettingsUncheckedUpdateOneWithoutUserNestedInput
+    equipments?: UserEquipmentUncheckedUpdateManyWithoutUserNestedInput
+    programs?: ProgramUncheckedUpdateManyWithoutUserNestedInput
+    workouts?: WorkoutSessionUncheckedUpdateManyWithoutUserNestedInput
+    bodyTrackings?: BodyTrackingUncheckedUpdateManyWithoutUserNestedInput
+    weights?: WeightEntryUncheckedUpdateManyWithoutUserNestedInput
+    meals?: MealUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    achievements?: UserAchievementUncheckedUpdateManyWithoutUserNestedInput
+    favorites?: FavoriteExerciseUncheckedUpdateManyWithoutUserNestedInput
+    chatMessages?: AiChatMessageUncheckedUpdateManyWithoutUserNestedInput
+    streaks?: DailyStreakUncheckedUpdateManyWithoutUserNestedInput
+    subscriptions?: SubscriptionUncheckedUpdateManyWithoutUserNestedInput
+    friendRequestsSent?: FriendshipUncheckedUpdateManyWithoutRequesterNestedInput
+    friendRequestsReceived?: FriendshipUncheckedUpdateManyWithoutAddresseeNestedInput
+    sessions?: SessionUncheckedUpdateManyWithoutUserNestedInput
+    accounts?: AccountUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateManyWithoutActiveProgramInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: StringFieldUpdateOperationsInput | string
+    password?: NullableStringFieldUpdateOperationsInput | string | null
+    gender?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    emailVerified?: BoolFieldUpdateOperationsInput | boolean
+    image?: NullableStringFieldUpdateOperationsInput | string | null
   }
 
   export type ProgramDayUpdateWithoutProgramInput = {

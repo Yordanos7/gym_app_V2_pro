@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, StatusBar } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, StatusBar, Alert } from "react-native";
 import { authFetch } from "@/lib/api";
 import { useLocalSearchParams, useRouter, Stack } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+import { useSession } from "@/lib/use-session";
 
 export default function ProgramDetailScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const { data: session } = useSession();
   const [program, setProgram] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [isEnrolling, setIsEnrolling] = useState(false);
 
   useEffect(() => {
     const fetchProgram = async () => {
@@ -29,6 +32,38 @@ export default function ProgramDetailScreen() {
     if (id) fetchProgram();
   }, [id]);
 
+  const handleEnroll = async () => {
+    if (!session?.user?.id) {
+        Alert.alert("Error", "You must be logged in to start a program.");
+        return;
+    }
+
+    setIsEnrolling(true);
+    try {
+        const response = await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/programs/enroll`, {
+            method: 'POST',
+            body: JSON.stringify({
+                programId: id,
+                userId: session.user.id
+            })
+        });
+
+        if (response.ok) {
+            Alert.alert("Success", "Program started! You can now see it on your dashboard.", [
+                { text: "Go to Dashboard", onPress: () => router.replace("/(tabs)") }
+            ]);
+        } else {
+            const error = await response.json();
+            Alert.alert("Error", error.error || "Failed to start program.");
+        }
+    } catch (error) {
+        console.error(error);
+        Alert.alert("Error", "An unexpected error occurred.");
+    } finally {
+        setIsEnrolling(false);
+    }
+  };
+
   if (loading) {
     return (
       <View className="flex-1 justify-center items-center bg-black">
@@ -44,6 +79,8 @@ export default function ProgramDetailScreen() {
       </View>
     );
   }
+
+  const isActive = session?.user?.activeProgramId === id;
 
   return (
     <View className="flex-1 bg-black">
@@ -79,6 +116,11 @@ export default function ProgramDetailScreen() {
                   <View className="bg-zinc-800 px-3 py-1 rounded-full border border-white/5">
                     <Text className="text-zinc-400 text-xs font-bold uppercase tracking-wider">{(program.days?.length || 0) * 4} Weeks</Text>
                   </View>
+                  {isActive && (
+                    <View className="bg-blue-500/10 px-3 py-1 rounded-full border border-blue-500/20">
+                         <Text className="text-blue-400 text-xs font-bold uppercase tracking-wider">Active</Text>
+                    </View>
+                  )}
                 </View>
 
                 <Text className="text-4xl font-black text-white italic uppercase tracking-tighter mb-4 leading-none">
@@ -140,19 +182,26 @@ export default function ProgramDetailScreen() {
       </ScrollView>
 
       {/* Floating Action Button */}
-      <View className="absolute bottom-6 left-6 right-6">
-        <Animated.View entering={FadeInUp.delay(800).springify()}>
-          <TouchableOpacity 
-            className="w-full bg-[#C6FF00] h-16 rounded-2xl flex-row items-center justify-center shadow-lg shadow-[#C6FF00]/20 active:opacity-90"
-            onPress={() => {
-                console.log("Start Program");
-            }}
-          >
-            <Text className="text-black font-black text-lg uppercase tracking-widest mr-2">Start Program</Text>
-            <Ionicons name="arrow-forward-circle" size={24} color="black" />
-          </TouchableOpacity>
-        </Animated.View>
-      </View>
+      {!isActive && (
+        <View className="absolute bottom-6 left-6 right-6">
+            <Animated.View entering={FadeInUp.delay(800).springify()}>
+            <TouchableOpacity 
+                className="w-full bg-[#C6FF00] h-16 rounded-2xl flex-row items-center justify-center shadow-lg shadow-[#C6FF00]/20 active:opacity-90"
+                onPress={handleEnroll}
+                disabled={isEnrolling}
+            >
+                {isEnrolling ? (
+                    <ActivityIndicator color="black" />
+                ) : (
+                    <>
+                        <Text className="text-black font-black text-lg uppercase tracking-widest mr-2">Start Program</Text>
+                        <Ionicons name="arrow-forward-circle" size={24} color="black" />
+                    </>
+                )}
+            </TouchableOpacity>
+            </Animated.View>
+        </View>
+      )}
     </View>
   );
 }

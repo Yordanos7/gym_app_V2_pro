@@ -14,7 +14,7 @@ type Program = {
   days: any[];
 };
 
-export default function WorkoutsScreen() {
+export default function ProgramsScreen() {
   const router = useRouter();
   const [programs, setPrograms] = useState<Program[]>([]);
   const [loading, setLoading] = useState(true);

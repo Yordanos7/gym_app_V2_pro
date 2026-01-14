@@ -13,6 +13,7 @@ type DashboardData = {
   userName: string;
   streak: number;
   goal: string;
+  activeProgram: any;
   todaysWorkout: any;
 };
 
@@ -94,7 +95,7 @@ export default function HomeScreen() {
                 refreshing={refreshing} 
                 onRefresh={onRefresh} 
                 tintColor="#C6FF00" 
-                progressViewOffset={50} // need to get more on this code line what is it and how is used
+                progressViewOffset={50}
             />
         }
       >
@@ -106,11 +107,50 @@ export default function HomeScreen() {
         <AnimatedStatsGrid stats={stats} />
 
         <View className="px-6 mt-8">
+          {/* Active Program Section */}
+          {data?.activeProgram && (
+              <Animated.View entering={FadeInUp.delay(200)} className="mb-10">
+                <View className="flex-row justify-between items-end mb-4">
+                    <Text className="text-black text-2xl font-black italic uppercase tracking-tighter">Current Plan</Text>
+                    <TouchableOpacity onPress={() => router.push(`/(tabs)/programs`)}>
+                        <Text className="text-zinc-500 text-xs font-bold uppercase tracking-widest">Swap Program</Text>
+                    </TouchableOpacity>
+                </View>
+                
+                <TouchableOpacity 
+                    activeOpacity={0.9}
+                    className="bg-[#C6FF00] p-6 rounded-[32px] shadow-xl overflow-hidden"
+                    onPress={() => router.push(`/program/${data.activeProgram.id}`)}
+                >
+                    <View className="flex-row justify-between items-start">
+                        <View className="flex-1 pr-4">
+                            <Text className="text-black/60 text-xs font-black uppercase tracking-widest mb-1">Active Now</Text>
+                            <Text className="text-black text-2xl font-black italic uppercase leading-tight">{data.activeProgram.name}</Text>
+                        </View>
+                        <View className="bg-black/10 p-3 rounded-full border border-black/5">
+                            <Ionicons name="trophy" size={24} color="black" />
+                        </View>
+                    </View>
+                    
+                    <View className="h-[1px] w-full bg-black/10 my-4" />
+                    
+                    <View className="flex-row justify-between items-center">
+                        <Text className="text-black/60 text-xs font-bold uppercase tracking-wider">
+                            {data.activeProgram.days?.length} Training sessions / week
+                        </Text>
+                        <View className="bg-black px-4 py-2 rounded-full">
+                            <Text className="text-[#C6FF00] text-[10px] font-black uppercase tracking-widest">Resume</Text>
+                        </View>
+                    </View>
+                </TouchableOpacity>
+              </Animated.View>
+          )}
+
           <Animated.View entering={FadeInUp.delay(400)}>
             <View className="flex-row justify-between items-end mb-4">
-                <Text className="text-black text-2xl font-black italic uppercase tracking-tighter">Your Grind</Text>
-                <TouchableOpacity onPress={() => router.push("/(tabs)/workouts")}>
-                    <Text className="text-balck text-xs font-bold uppercase tracking-widest">View All</Text>
+                <Text className="text-black text-2xl font-black italic uppercase tracking-tighter">Today's Grind</Text>
+                <TouchableOpacity onPress={() => router.push("/(tabs)/exercises")}>
+                    <Text className="text-zinc-500 text-xs font-bold uppercase tracking-widest">Browse List</Text>
                 </TouchableOpacity>
             </View>
             

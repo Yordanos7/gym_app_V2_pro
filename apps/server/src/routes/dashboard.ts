@@ -32,6 +32,26 @@ router.get("/", async (req, res) => {
 
     const userId = session.user.id;
 
+    // Fetch user with active program
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        activeProgram: {
+          include: {
+            days: {
+              include: {
+                exercises: {
+                  include: {
+                    exercise: true
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    });
+
     // Fetch user profile
     const profile = await prisma.userProfile.findUnique({
       where: { userId },
@@ -42,20 +62,16 @@ router.get("/", async (req, res) => {
       where: { userId, completed: true },
     });
 
-    // Fetch today's workout
+    // Fetch today's workout (any specifically logged session)
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0);
-    
     const endOfDay = new Date();
     endOfDay.setHours(23, 59, 59, 999);
 
     const todaysWorkout = await prisma.workoutSession.findFirst({
       where: {
         userId,
-        date: {
-          gte: startOfDay,
-          lte: endOfDay,
-        },
+        date: { gte: startOfDay, lte: endOfDay },
       },
       include: {
         exercises: {
@@ -72,19 +88,16 @@ router.get("/", async (req, res) => {
 
     if (todaysWorkout) {
       exerciseCount = todaysWorkout.exercises.length;
-      // Estimate duration: 5 mins per exercise + 2 mins per set
-      // Or simpler: 45 mins base if > 0, or just sum sets. 
-      // Let's do: 5 mins per exercise as a rough estimate if no sets, 
-      // or better: count total sets * 3 mins.
       const totalSets = todaysWorkout.exercises.reduce((acc, ex) => acc + ex.sets.length, 0);
-      duration = totalSets > 0 ? totalSets * 4 : exerciseCount * 10; // Fallback to 10 mins per exercise if no sets logged yet
-      if (duration === 0 && exerciseCount > 0) duration = 45; // Default if just planned
+      duration = totalSets > 0 ? totalSets * 4 : exerciseCount * 10;
+      if (duration === 0 && exerciseCount > 0) duration = 45;
     }
 
     res.json({
-      userName: session.user.name,
+      userName: user?.name || session.user.name,
       streak,
       goal: profile?.goal,
+      activeProgram: user?.activeProgram,
       todaysWorkout: todaysWorkout ? {
         ...todaysWorkout,
         exerciseCount,

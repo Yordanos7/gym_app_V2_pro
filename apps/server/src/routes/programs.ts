@@ -47,4 +47,26 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+router.post("/enroll", async (req, res) => {
+  try {
+    const { programId, userId } = req.body;
+
+    if (!programId || !userId) {
+      return res.status(400).json({ error: "Program ID and User ID are required" });
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        activeProgramId: programId,
+      },
+    });
+
+    res.json({ success: true, activeProgramId: updatedUser.activeProgramId });
+  } catch (error) {
+    console.error("Enrollment error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 export default router;
