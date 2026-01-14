@@ -67,4 +67,54 @@ router.post("/", async (req, res) => {
   }
 });
 
+router.get("/", async (req, res) => {
+  try {
+    const session = await auth.api.getSession({ headers: req.headers });
+    if (!session) return res.status(401).json({ error: "Unauthorized" });
+
+    const userId = session.user.id;
+
+    // Fetch User with Profile and Streak
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+      include: {
+        profile: true,
+        _count: {
+          select: {
+            workouts: true,
+            achievements: true,
+          }
+        }
+      }
+    });
+
+    // Calculate current streak (simplified: consecutive days with DailyStreak entries)
+    const streaks = await prisma.dailyStreak.findMany({
+      where: { userId, completed: true },
+      orderBy: { date: 'desc' },
+      take: 30
+    });
+
+    let currentStreak = 0;
+    if (streaks.length > 0) {
+        // Simple streak logic: count consecutive entries starting from today/yesterday
+        currentStreak = streaks.length; // placeholder for real streak logic
+    }
+
+    res.json({
+      name: user?.name || session.user.name,
+      level: user?.profile?.level || "BEGINNER",
+      stats: {
+        sessions: user?._count.workouts || 0,
+        streak: currentStreak,
+        achievements: user?._count.achievements || 0,
+        rank: user?.profile?.level === "ADVANCED" ? "ELITE" : user?.profile?.level === "INTERMEDIATE" ? "WARRIOR" : "RECRUIT"
+      }
+    });
+  } catch (error) {
+    console.error("Profile fetch error:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
 export default router;

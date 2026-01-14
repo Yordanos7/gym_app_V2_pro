@@ -8,40 +8,57 @@ const SCHEME = (Array.isArray(Constants.expoConfig?.scheme)
 import { authClient } from "./auth-client";
 
 export async function getSessionToken(): Promise<string | null> {
-    try {
-        // Attempt 1: Standard library way
-        const { data: sessionData } = await authClient.getSession();
-        if (sessionData?.session?.token) {
-            console.log(`[API] Token found via authClient.getSession()`);
-            return sessionData.session.token;
-        }
+    const maxRetries = 3;
+    let attempt = 0;
 
-        // Attempt 2: Brute-force SecureStore search with all possible keys
-        const possibleKeys = [
-            `${SCHEME}.better-auth.session_token`,
-            `${SCHEME}.session_token`,
-            'better-auth.session_token',
-            'session_token',
-            `${SCHEME}.better-auth.session`,
-            `${SCHEME}.session`,
-            'better-auth.session',
-            'session',
-        ];
-
-        for (const key of possibleKeys) {
-            const token = await SecureStore.getItemAsync(key);
-            if (token) {
-                console.log(`[API] Token found via brute-force key: ${key}`);
-                return token;
+    async function attemptGetToken(): Promise<string | null> {
+        try {
+            // Attempt 1: Standard library way
+            const { data: sessionData } = await authClient.getSession();
+            if (sessionData?.session?.token) {
+                console.log(`[API] Token found via authClient.getSession()`);
+                return sessionData.session.token;
             }
-        }
 
-        console.warn(`[API] FAILED to find any session token.`);
-        return null;
-    } catch (error) {
-        console.error('[API] getSessionToken error:', error);
-        return null;
+            // Attempt 2: Brute-force SecureStore search with all possible keys
+            const possibleKeys = [
+                `${SCHEME}.better-auth.session_token`,
+                `${SCHEME}.session_token`,
+                'better-auth.session_token',
+                'session_token',
+                `${SCHEME}.better-auth.session`,
+                `${SCHEME}.session`,
+                'better-auth.session',
+                'session',
+            ];
+
+            for (const key of possibleKeys) {
+                const token = await SecureStore.getItemAsync(key);
+                if (token) {
+                    console.log(`[API] Token found via brute-force key: ${key}`);
+                    return token;
+                }
+            }
+            return null;
+        } catch (error) {
+            console.error('[API] attemptGetToken error:', error);
+            return null;
+        }
     }
+
+    while (attempt < maxRetries) {
+        const token = await attemptGetToken();
+        if (token) return token;
+        
+        attempt++;
+        if (attempt < maxRetries) {
+            console.log(`[API] Token not found, retry attempt ${attempt}...`);
+            await new Promise(resolve => setTimeout(resolve, 500 * attempt)); 
+        }
+    }
+
+    console.warn(`[API] FAILED to find any session token after ${maxRetries} attempts.`);
+    return null;
 }
 
 export async function authFetch(url: string, options: RequestInit = {}) {

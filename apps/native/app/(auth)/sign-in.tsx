@@ -29,7 +29,7 @@ export default function SignIn() {
       if (error) {
         Alert.alert("Error", error.message);
       } else {
-        router.replace("/(tabs)");
+        router.replace("/");
       }
     } catch (err) {
       Alert.alert("Error", "Something went wrong");

@@ -1,14 +1,35 @@
-import { View, Text, TouchableOpacity, ScrollView, StatusBar, Alert, Image } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView, StatusBar, Alert, ActivityIndicator } from "react-native";
+import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useSession } from "@/lib/use-session";
 import { LinearGradient } from "expo-linear-gradient";
 import Animated, { FadeInDown, FadeInUp } from "react-native-reanimated";
+import { authFetch } from "@/lib/api";
 
 export default function ProfileScreen() {
   const router = useRouter();
   const { data: session } = useSession();
+  const [profileData, setProfileData] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await authFetch(`${process.env.EXPO_PUBLIC_SERVER_URL}/api/profile`);
+        if (response.ok) {
+          const json = await response.json();
+          setProfileData(json);
+        }
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProfile();
+  }, []);
 
   const handleSignOut = () => {
     Alert.alert(
@@ -50,6 +71,14 @@ export default function ProfileScreen() {
     <Text className="text-zinc-500 text-[10px] font-black uppercase tracking-[3px] mb-4 mt-6 ml-1">{title}</Text>
   );
 
+  if (loading) {
+    return (
+      <View className="flex-1 bg-black justify-center items-center">
+        <ActivityIndicator size="large" color="#C6FF00" />
+      </View>
+    );
+  }
+
   return (
     <View className="flex-1 bg-black">
       <StatusBar barStyle="light-content" />
@@ -60,33 +89,42 @@ export default function ProfileScreen() {
 
       <ScrollView className="flex-1" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingBottom: 120 }}>
         {/* Hero Section */}
-        <Animated.View entering={FadeInUp.duration(800)} className="pt-20 px-6 pb-10">
+        <Animated.View entering={FadeInUp.duration(800)} className="pt-24 px-6 pb-10">
             <View className="items-center">
                 <View className="relative">
-                    <LinearGradient
-                        colors={['#C6FF00', '#7AB800']}
-                        className="w-28 h-28 rounded-full p-[2px]"
-                    >
-                        <View className="bg-black w-full h-full rounded-full items-center justify-center overflow-hidden border-[4px] border-black">
-                           {session?.user?.image ? (
-                               <Image source={{ uri: session.user.image }} className="w-full h-full" />
-                           ) : (
-                               <Text className="text-[#C6FF00] text-3xl font-black italic">{session?.user?.name?.substring(0, 2).toUpperCase() || "WA"}</Text>
-                           )}
-                        </View>
-                    </LinearGradient>
-                    <TouchableOpacity className="absolute bottom-0 right-0 bg-[#C6FF00] w-8 h-8 rounded-full items-center justify-center border-4 border-black">
-                        <Ionicons name="camera" size={14} color="black" />
-                    </TouchableOpacity>
+                    {/* Identity Badge - stylized big initial */}
+                    <View className="w-24 h-24 rounded-[32px] bg-zinc-900 border border-white/10 items-center justify-center shadow-2xl overflow-hidden">
+                        <LinearGradient
+                            colors={['#C6FF00', 'transparent']}
+                            style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 1 }}
+                        />
+                        <Text className="text-[#C6FF00] text-5xl font-black italic">
+                            {(profileData?.name || session?.user?.name || "W")[0].toUpperCase()}
+                        </Text>
+                    </View>
+                    
+                    {/* Level Badge Ornament */}
+                    <View className="absolute -top-2 -right-2 bg-black border border-[#C6FF00]/50 w-8 h-8 rounded-full items-center justify-center shadow-lg">
+                         <Ionicons name="flash" size={14} color="#C6FF00" />
+                    </View>
                 </View>
                 
-                <Text className="text-white text-3xl font-black uppercase italic mt-6 tracking-tighter">
-                    {session?.user?.name || "Warrior"}
-                </Text>
-                <View className="flex-row items-center mt-1">
-                    <View className="bg-[#C6FF00]/10 border border-[#C6FF00]/30 px-3 py-1 rounded-full flex-row items-center">
-                        <Ionicons name="shield-checkmark" size={12} color="#C6FF00" />
-                        <Text className="text-[#C6FF00] text-[10px] font-black uppercase ml-1.5 tracking-widest">Elite Member</Text>
+                <View className="items-center mt-8">
+                    <Text className="text-zinc-500 text-[10px] font-black uppercase tracking-[5px] mb-2">Authenticated Warrior</Text>
+                    <Text className="text-white text-4xl font-black uppercase italic tracking-tighter leading-none">
+                        {profileData?.name || session?.user?.name || "Warrior"}
+                    </Text>
+                    
+                    <View className="flex-row items-center mt-6">
+                        <View className="bg-[#C6FF00] px-4 py-1.5 rounded-full rotate-[-2deg]">
+                            <Text className="text-black text-[10px] font-black uppercase tracking-widest">
+                                {profileData?.level || "Elite Member"}
+                            </Text>
+                        </View>
+                        <View className="w-2 h-2 rounded-full bg-zinc-800 mx-3" />
+                         <View className="bg-white/5 border border-white/10 px-4 py-1.5 rounded-full">
+                            <Text className="text-zinc-400 text-[10px] font-black uppercase tracking-widest">Since 2025</Text>
+                        </View>
                     </View>
                 </View>
             </View>
@@ -94,18 +132,18 @@ export default function ProfileScreen() {
             {/* Quick Stats */}
             <View className="flex-row justify-between mt-10">
                 <View className="items-center flex-1">
-                    <Text className="text-white text-xl font-black italic">12</Text>
+                    <Text className="text-white text-xl font-black italic">{profileData?.stats.sessions || 0}</Text>
                     <Text className="text-zinc-500 text-[10px] font-black uppercase tracking-widest mt-1">Sessions</Text>
                 </View>
                 <View className="w-[1px] h-full bg-white/5" />
                 <View className="items-center flex-1">
-                    <Text className="text-[#C6FF00] text-xl font-black italic">8</Text>
+                    <Text className="text-[#C6FF00] text-xl font-black italic">{profileData?.stats.streak || 0}</Text>
                     <Text className="text-zinc-500 text-[10px] font-black uppercase tracking-widest mt-1">Streak</Text>
                 </View>
                 <View className="w-[1px] h-full bg-white/5" />
                 <View className="items-center flex-1">
-                    <Text className="text-white text-xl font-black italic">LVL 4</Text>
-                    <Text className="text-zinc-500 text-[10px] font-black uppercase tracking-widest mt-1">Rank</Text>
+                    <Text className="text-white text-xl font-black italic">{profileData?.stats.rank || "RANK 1"}</Text>
+                    <Text className="text-zinc-500 text-[10px] font-black uppercase tracking-widest mt-1">Status</Text>
                 </View>
             </View>
         </Animated.View>
@@ -116,21 +154,21 @@ export default function ProfileScreen() {
             <ProfileItem 
                 icon="analytics-outline" 
                 label="Workout Statistics" 
-                onPress={() => {}} 
+                onPress={() => router.push("/(tabs)/progress")} 
                 secondary="Detailed breakdown"
             />
             <ProfileItem 
                 icon="medal-outline" 
                 label="Achievements" 
-                onPress={() => {}} 
-                secondary="12 unlocked"
+                onPress={() => Alert.alert("Coming Soon", "Achievement details are on the roadmap!")} 
+                secondary={`${profileData?.stats.achievements || 0} unlocked`}
             />
 
             <SectionHeader title="Settings" />
             <ProfileItem 
                 icon="person-outline" 
                 label="Account Settings" 
-                onPress={() => {}} 
+                onPress={() => Alert.alert("Settings", "Account settings will be available in the next update.")} 
             />
             <ProfileItem 
                 icon="notifications-outline" 

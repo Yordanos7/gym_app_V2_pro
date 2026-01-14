@@ -28,7 +28,7 @@ export default function ScheduleWorkoutScreen() {
 
       if (response.ok) {
         Alert.alert("Success", "Mission locked! Workout scheduled.");
-        router.replace("/(tabs)");
+        router.replace("/");
       } else {
         const errorText = await response.text();
         console.error("Schedule error:", errorText);

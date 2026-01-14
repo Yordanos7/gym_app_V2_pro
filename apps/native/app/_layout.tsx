@@ -24,12 +24,12 @@ function AuthCheck({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (isPending) return;
 
-    const inAuthGroup = segments[0] === "(auth)";
+    const inAuthGroup = (segments as string[]).includes("(auth)");
     
     if (!session && !inAuthGroup) {
       router.replace("/(auth)/welcome");
     } else if (session && inAuthGroup) {
-      router.replace("/(tabs)");
+      router.replace("/");
     }
   }, [session, isPending, segments]);
 

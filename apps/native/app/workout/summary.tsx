@@ -120,7 +120,7 @@ export default function WorkoutSummaryScreen() {
 
         <TouchableOpacity 
             className="w-full bg-[#C6FF00] h-16 rounded-2xl items-center justify-center mt-6 shadow-lg shadow-[#C6FF00]/10"
-            onPress={() => router.replace("/(tabs)")}
+            onPress={() => router.replace("/")}
         >
             <Text className="text-black font-black text-lg uppercase tracking-widest">Return Home</Text>
         </TouchableOpacity>

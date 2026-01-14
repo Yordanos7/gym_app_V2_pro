@@ -51,7 +51,7 @@ export default function ProgramDetailScreen() {
         if (response.ok) {
             setProgram((prev: any) => ({ ...prev, isActive: true }));
             Alert.alert("Success", "Program started! You can now see it on your dashboard.", [
-                { text: "Go to Dashboard", onPress: () => router.replace("/(tabs)") }
+                { text: "Go to Dashboard", onPress: () => router.replace("/") }
             ]);
         } else {
             const error = await response.json();

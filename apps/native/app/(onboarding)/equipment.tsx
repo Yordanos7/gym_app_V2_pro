@@ -53,7 +53,7 @@ export default function EquipmentScreen() {
         throw new Error("Failed to save profile");
       }
       
-      router.replace("/(drawer)");
+      router.replace("/");
     } catch (err) {
       console.error(err);
       Alert.alert("Error", "Failed to save profile");
