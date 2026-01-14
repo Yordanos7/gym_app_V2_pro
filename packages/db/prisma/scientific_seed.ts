@@ -19,6 +19,7 @@ async function main() {
       mechanics: "COMPOUND",
       force: "PUSH",
       equipment: "Barbell",
+      videoUrl: "rT7DgIPjiDs",
       tips: "Keep your feet planted firmly on the ground. Retract your scapula (squeeze shoulder blades together) to create a stable base. Touch the bar to your chest at the nipple line and drive up explosively.",
       mistakes: "Lifting the glutes off the bench, bouncing the bar off the chest, and flaring the elbows out at 90 degrees."
     },
@@ -29,6 +30,7 @@ async function main() {
       mechanics: "COMPOUND",
       force: "PUSH",
       equipment: "Barbell",
+      videoUrl: "gcNh17Ckjgg",
       tips: "Break at the hips and knees simultaneously. Keep your chest up and back flat. Descend until your thighs are parallel to the floor or slightly below. Drive through your heels.",
       mistakes: "Rounding the lower back, knees caving inward (valgus), and failing to reach proper depth."
     },
@@ -39,6 +41,7 @@ async function main() {
       mechanics: "COMPOUND",
       force: "PULL",
       equipment: "Barbell",
+      videoUrl: "ytGaGIn3SjE",
       tips: "The bar should remain in contact with your legs throughout the lift. Engage your lats by 'pulling' the slack out of the bar before lifting. Keep your spine neutral.",
       mistakes: "Rounding the back during the lift, jerking the bar off the ground, and excessive leaning back at the top."
     },
@@ -49,6 +52,7 @@ async function main() {
       mechanics: "COMPOUND",
       force: "PUSH",
       equipment: "Bodyweight",
+      videoUrl: "iodXndN8-m0",
       tips: "Maintain a straight line from head to heels. Tuck your elbows at a 45-degree angle. Lower yourself until your chest nearly touches the floor.",
       mistakes: "Sagging hips, head leaning forward, and half-reps (not going low enough)."
     }
@@ -62,6 +66,7 @@ async function main() {
         difficulty: data.difficulty as any,
         mechanics: data.mechanics as any,
         force: data.force as any,
+        videoUrl: data.videoUrl,
         tips: data.tips,
         mistakes: data.mistakes
       }
