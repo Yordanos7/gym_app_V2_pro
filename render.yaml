@@ -3,7 +3,7 @@ services:
     name: gym-app-backend
     runtime: node
     plan: free
-    buildCommand: npm install && npm run db:generate && npm run build --filter=server...
+    buildCommand: npm install --include=dev && npx turbo -F @gymApp/db db:generate && npx turbo build --filter=server...
     startCommand: npm run start --filter=server
     envVars:
       - key: DATABASE_URL
