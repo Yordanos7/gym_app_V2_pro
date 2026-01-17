@@ -4,7 +4,7 @@ services:
     runtime: node
     plan: free
     buildCommand: npm install --include=dev && npx turbo -F @gymApp/db db:generate && npx turbo build --filter=server...
-    startCommand: npm run start --filter=server
+    startCommand: node apps/server/dist/index.mjs
     envVars:
       - key: DATABASE_URL
         fromDatabase:
