@@ -1,5 +1,5 @@
 import path from "node:path";
-import { defineConfig, env } from "prisma/config";
+import { defineConfig } from "prisma/config";
 import dotenv from "dotenv";
 
 dotenv.config({
@@ -12,6 +12,6 @@ export default defineConfig({
 		path: path.join("prisma", "migrations"),
 	},
 	datasource: {
-		url: env("DATABASE_URL"),
+		url: process.env.DATABASE_URL || "postgresql://postgres:postgres@localhost:5432/gymApp",
 	},
 });
