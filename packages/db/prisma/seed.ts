@@ -35,7 +35,7 @@ async function main() {
   const back = await prisma.muscle.findUnique({ where: { name: "Back" } });
 
   // Exercises
-  const exercises = [
+  const exerciseData = [
     {
       name: "Bench Press",
       description: "Lie on a flat bench and press the bar up.",
@@ -62,15 +62,23 @@ async function main() {
     },
   ];
 
-  for (const ex of exercises) {
-    await prisma.exercise.create({
-      data: ex,
+  for (const ex of exerciseData) {
+    await prisma.exercise.upsert({
+        where: { id: `seed-${ex.name.toLowerCase().replace(/\s+/g, '-')}` }, // Using a stable ID for seeding
+        update: ex,
+        create: {
+            id: `seed-${ex.name.toLowerCase().replace(/\s+/g, '-')}`,
+            ...ex
+        }
     });
   }
 
   // Program
-  const program = await prisma.program.create({
-    data: {
+  const program = await prisma.program.upsert({
+    where: { id: "seed-beginner-full-body" },
+    update: {},
+    create: {
+      id: "seed-beginner-full-body",
       name: "Beginner Full Body",
       description: "A simple 3-day full body routine.",
       difficulty: "BEGINNER",
@@ -78,8 +86,11 @@ async function main() {
   });
 
   // Program Days
-  const day1 = await prisma.programDay.create({
-    data: {
+  const day1 = await prisma.programDay.upsert({
+    where: { id: "seed-day-1" },
+    update: {},
+    create: {
+      id: "seed-day-1",
       programId: program.id,
       title: "Day A",
       dayOfWeek: 1,
@@ -89,8 +100,13 @@ async function main() {
   // Add exercises to day
   const allExercises = await prisma.exercise.findMany();
   for (const ex of allExercises) {
-    await prisma.programExercise.create({
-      data: {
+    await prisma.programExercise.upsert({
+      where: { 
+        id: `seed-prog-ex-${ex.id}`
+      },
+      update: {},
+      create: {
+        id: `seed-prog-ex-${ex.id}`,
         programDayId: day1.id,
         exerciseId: ex.id,
       },
