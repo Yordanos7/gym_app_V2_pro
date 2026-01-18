@@ -12,6 +12,16 @@ export default defineConfig({
 		path: path.join("prisma", "migrations"),
 	},
 	datasource: {
-		url: process.env.DATABASE_URL || "postgresql://postgres:postgres@localhost:5432/gymApp",
+		url: (() => {
+			const url = process.env.DATABASE_URL;
+			if (!url) {
+				console.error("❌ ERROR: DATABASE_URL is not set in the environment.");
+				console.error("Please make sure you have added it to the 'Environment' tab in Render.");
+				// We don't throw here to allow 'prisma generate' to potentially work without a DB if needed,
+				// but 'db push' will fail later with this helpful log.
+				return "postgresql://MISSING_DATABASE_URL@localhost:5432/missing";
+			}
+			return url;
+		})(),
 	},
 });
